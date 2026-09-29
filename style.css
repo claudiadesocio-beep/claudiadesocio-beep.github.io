@@ -1,0 +1,179 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+  color: #4a2c00;
+  background-color: #fff8e6;
+}
+
+.container {
+  width: 90%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* Header */
+.site-header {
+  background-color: #ff8c00;
+  color: #fff;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.logo {
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav a:hover {
+  color: #ffeb99;
+  text-decoration: underline;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #ffdf5d, #ff9a3d);
+  text-align: center;
+  padding: 4rem 0;
+  color: #4a2c00;
+}
+
+.hero h1 {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: #ff8c00;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #e67a00;
+}
+
+.btn-outline {
+  border: 2px solid #4a2c00;
+  color: #4a2c00;
+}
+
+.btn-outline:hover {
+  background-color: #4a2c00;
+  color: #ffdf5d;
+}
+
+/* Sections */
+.section {
+  padding: 3rem 0;
+  background-color: #fff;
+}
+
+.section-alt {
+  background-color: #ffefb0;
+}
+
+.section h2 {
+  color: #ff8c00;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.section p {
+  margin-bottom: 1rem;
+}
+
+.contact-list {
+  list-style: none;
+  margin-top: 1rem;
+  background: #fff;
+  border: 2px solid #ff8c00;
+  border-radius: 12px;
+  padding: 1.2rem;
+}
+
+.contact-list li {
+  margin-bottom: 0.5rem;
+}
+
+.contact-list a {
+  color: #ff8c00;
+}
+
+/* Footer */
+.site-footer {
+  background-color: #ff8c00;
+  color: #fff;
+  text-align: center;
+  padding: 1.2rem 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .header-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero {
+    padding: 2.5rem 0;
+  }
+
+  .hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .section {
+    padding: 2rem 0;
+  }
+}
