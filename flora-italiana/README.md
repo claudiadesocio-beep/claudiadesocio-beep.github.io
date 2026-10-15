@@ -72,8 +72,14 @@ Per l'illustrazione di riserva copia un `plate` da una specie dalla forma simile
 ## Aggiungere immagini
 
 Le istruzioni complete sono in `public/images/species/README.md`. In breve: copia il file con il nome
-`<id>.webp`, poi nella scheda cambia `image.status` da `"pending"` a `"ready"`. Le immagini generate con AI
-restano etichettate come illustrative; per una fotografia con licenza imposta `ai: false` e cita la fonte.
+`<id>.jpg` (o `.webp`), poi nella scheda indica il file in `image.file` e cambia `image.status` da `"pending"` a `"ready"`.
+Le schede attuali usano fotografie di Wikimedia Commons con licenza libera: per ogni fotografia (`ai: false`)
+il campo `image.credit` con autore, licenza e pagina della fonte è obbligatorio, e il sito lo mostra nella didascalia
+e nella pagina "Metodo e fonti". Le immagini generate con AI (`ai: true`) restano etichettate come illustrative.
+
+Le miniature di foglie, fiori, frutti e portamento stanno in `public/images/species/parts/` (`<id>-<parte>.jpg`, quadrate)
+e si attivano con il campo `photos` della scheda (`leaves`, `flowers`, `fruits`, `habit`), ognuna con `file`, `alt` e `credit`.
+Se una parte manca, il sito mostra la tavola disegnata.
 
 ## Cosa manca per le estensioni future
 

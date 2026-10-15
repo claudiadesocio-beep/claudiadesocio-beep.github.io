@@ -1,6 +1,6 @@
 {
   "name": "flora-italiana",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "Enciclopedia illustrata della flora spontanea italiana — prototipo statico HTML/CSS/JS",
   "scripts": {

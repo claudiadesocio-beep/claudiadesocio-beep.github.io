@@ -41,6 +41,6 @@ Add `js/i18n/<code>.js` (same keys as `en.js`), a `<script>` tag in `index.html`
 
 ## Other notes
 
-- Asset URLs in `index.html` carry a `?v=0.2.0` cache-busting query; bump it together with `FLORA.meta.version` and `package.json` on release.
+- Asset URLs in `index.html` carry a `?v=<version>` cache-busting query (currently 0.2.1); bump it together with `FLORA.meta.version` and `package.json` on release.
 - `css/style.css` defines color tokens on `:root` with dark-mode overrides (`prefers-color-scheme` plus `[data-theme]`); use the tokens rather than hard-coded colors.
 - `archivio/flora-italiana-v1.html` is the archived single-file v1, kept for reference only — don't edit it.

@@ -2,7 +2,9 @@
    Una sola voce per specie (id univoco); i testi sono oggetti { it, en }.
    Regole: nessun dato senza fonte; se un dato manca si lascia null e l'interfaccia lo segnala.
    quality: "verificato" | "dimostrativo" | "da-verificare" (vedi taxonomy.js).
-   image.status: "pending" finché il file non è in public/images/species/, poi "ready". */
+   image.status: "pending" finché il file non è in public/images/species/, poi "ready".
+   image.credit: obbligatorio per le fotografie (ai: false): autore, licenza e pagina della fonte.
+   photos: foto di dettaglio (leaves, flowers, fruits, habit), ognuna con file, alt e credit; se una parte manca resta la tavola disegnata. */
 window.FLORA = window.FLORA || {};
 
 FLORA.species = [
@@ -29,7 +31,18 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "da-verificare", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/quercus-ilex.webp", status: "pending", ai: true, alt: { it: "Ramo di leccio con foglie coriacee e ghiande", en: "Holm oak branch with leathery leaves and acorns" } },
+    image: { file: "public/images/species/quercus-ilex.jpg", status: "ready", ai: false, alt: { it: "Rametto di leccio con foglie coriacee grigio-verdi e una ghianda", en: "Holm oak twig with leathery grey-green leaves and an acorn" },
+      credit: { author: "Basotxerri", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Jard%C3%ADn_Bot%C3%A1nico_Olarizu_-_Bellota_de_encina_01.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/quercus-ilex-leaves.jpg", alt: { it: "Rametti di leccio con foglie coriacee", en: "Holm oak shoots with leathery leaves" },
+        credit: { author: "Elmontico.es", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:EncinaElMonticoNet.jpg" } },
+      flowers: { file: "public/images/species/parts/quercus-ilex-flowers.jpg", alt: { it: "Amenti maschili gialli di leccio", en: "Yellow male catkins of holm oak" },
+        credit: { author: "Miguel Gómez de Aranda", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Quercus_ilex_Male_catkins.JPG" } },
+      fruits: { file: "public/images/species/parts/quercus-ilex-fruits.jpg", alt: { it: "Ghiande di leccio nella cupola", en: "Holm oak acorns in their cups" },
+        credit: { author: "Paebi", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", source: "https://commons.wikimedia.org/wiki/File:Quercus_ilex2.jpg" } },
+      habit: { file: "public/images/species/parts/quercus-ilex-habit.jpg", alt: { it: "Leccio isolato in un campo", en: "Solitary holm oak in a field" },
+        credit: { author: "Fabio Alessandro Locati", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Fale_-_Spain_-_Landscape_-_30.jpg" } }
+    },
     plate: { type: "branch", leaf: "ovate", L: 46, W: 16, n: 9, flower: "amento", fruit: "acorn", habit: "tree-round" }
   },
   {
@@ -55,7 +68,18 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "da-verificare", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/myrtus-communis.webp", status: "pending", ai: true, alt: { it: "Rametto di mirto con fiori bianchi e bacche blu-nerastre", en: "Myrtle sprig with white flowers and blue-black berries" } },
+    image: { file: "public/images/species/myrtus-communis.jpg", status: "ready", ai: false, alt: { it: "Rametto di mirto con foglie lucide e fiori bianchi dai numerosi stami", en: "Myrtle sprig with glossy leaves and white flowers with many stamens" },
+      credit: { author: "Umberto Ferrando", license: "CC BY 2.0", licenseUrl: "https://creativecommons.org/licenses/by/2.0", source: "https://commons.wikimedia.org/wiki/File:Myrtus_communis_L._(49237792552).jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/myrtus-communis-leaves.jpg", alt: { it: "Foglie lucide di mirto con una bacca", en: "Glossy myrtle leaves with a berry" },
+        credit: { author: "Forest & Kim Starr", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0", source: "https://commons.wikimedia.org/wiki/File:Starr_070525-7177_Myrtus_communis.jpg" } },
+      flowers: { file: "public/images/species/parts/myrtus-communis-flowers.jpg", alt: { it: "Fiori bianchi di mirto con lunghi stami", en: "White myrtle flowers with long stamens" },
+        credit: { author: "Forest & Kim Starr", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0", source: "https://commons.wikimedia.org/wiki/File:Starr_070621-7465_Myrtus_communis.jpg" } },
+      fruits: { file: "public/images/species/parts/myrtus-communis-fruits.jpg", alt: { it: "Bacche blu-nerastre di mirto tra le foglie", en: "Blue-black myrtle berries among the leaves" },
+        credit: { author: "A. Barra", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0", source: "https://commons.wikimedia.org/wiki/File:Myrtus_communis_RJB.jpg" } },
+      habit: { file: "public/images/species/parts/myrtus-communis-habit.jpg", alt: { it: "Arbusto di mirto su una costa rocciosa", en: "Myrtle shrub on a rocky coast" },
+        credit: { author: "Sten Porse", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Maquis_and_garrigue_in_Corsica6.jpg" } }
+    },
     plate: { type: "branch", leaf: "lanceolate", L: 30, W: 8, n: 14, opp: true, flower: "myrtle", fruit: "berry", habit: "shrub" }
   },
   {
@@ -81,7 +105,18 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "da-verificare", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/chamaerops-humilis.webp", status: "pending", ai: true, alt: { it: "Cespo di palma nana con foglie a ventaglio", en: "Dwarf palm clump with fan-shaped leaves" } },
+    image: { file: "public/images/species/chamaerops-humilis.jpg", status: "ready", ai: false, alt: { it: "Cespi di palma nana con foglie a ventaglio nella macchia della Sardegna", en: "Clumps of dwarf fan palm with fan-shaped leaves in Sardinian scrub" },
+      credit: { author: "Gianni Careddu", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Flora_della_Sardegna_187_(4).jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/chamaerops-humilis-leaves.jpg", alt: { it: "Cespo di palma nana con foglie a ventaglio", en: "Dwarf palm clump with fan-shaped leaves" },
+        credit: { author: "Josepgesti", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Chamaerops_humilis,_Bot.jpg" } },
+      flowers: { file: "public/images/species/parts/chamaerops-humilis-flowers.jpg", alt: { it: "Infiorescenze gialle di palma nana tra le foglie", en: "Yellow dwarf palm inflorescences among the leaves" },
+        credit: { author: "Photo by David J. Stang", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Chamaerops_humilis_19zz.jpg" } },
+      fruits: { file: "public/images/species/parts/chamaerops-humilis-fruits.jpg", alt: { it: "Grappolo di frutti di palma nana", en: "Cluster of dwarf palm fruits" },
+        credit: { author: "Fabio Alessandro Locati", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Fale_-_Giardini_Botanici_Hanbury_in_Ventimiglia_-_372.jpg" } },
+      habit: { file: "public/images/species/parts/chamaerops-humilis-habit.jpg", alt: { it: "Palma nana tra le rocce calcaree", en: "Dwarf palm among limestone rocks" },
+        credit: { author: "tato grasso", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", source: "https://commons.wikimedia.org/wiki/File:Chamaerops_humilis_MP01.JPG" } }
+    },
     plate: { type: "fan", flower: "palmflower", fruit: "drupe", habit: "palm" }
   },
   {
@@ -109,7 +144,18 @@ FLORA.species = [
     sources: ["galasso", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "da-verificare", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/opuntia-ficus-indica.webp", status: "pending", ai: true, alt: { it: "Pale di fico d'India con fiori gialli e frutti", en: "Prickly pear pads with yellow flowers and fruits" } },
+    image: { file: "public/images/species/opuntia-ficus-indica.jpg", status: "ready", ai: false, alt: { it: "Frutti arancioni di fico d'India sul bordo di una pala", en: "Orange prickly pear fruits on the edge of a pad" },
+      credit: { author: "Uoaei1", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Opuntia_ficus-indica_fruits_Crete_01.JPG" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/opuntia-ficus-indica-leaves.jpg", alt: { it: "Pale (cladodi) di fico d'India", en: "Prickly pear pads (cladodes)" },
+        credit: { author: "ZooFari (talk)", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Captive_Prickly_Pear.JPG" } },
+      flowers: { file: "public/images/species/parts/opuntia-ficus-indica-flowers.jpg", alt: { it: "Fiore giallo di fico d'India", en: "Yellow prickly pear flower" },
+        credit: { author: "Pequod76", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Fiore_di_ficodindia.JPG" } },
+      fruits: { file: "public/images/species/parts/opuntia-ficus-indica-fruits.jpg", alt: { it: "Frutti gialli e arancioni sul bordo di una pala", en: "Yellow and orange fruits on the edge of a pad" },
+        credit: { author: "Giorgiomonteforti", license: "Public domain", licenseUrl: "", source: "https://commons.wikimedia.org/wiki/File:CarmendelosmartiresgranadaGM_(3).JPG" } },
+      habit: { file: "public/images/species/parts/opuntia-ficus-indica-habit.jpg", alt: { it: "Grande pianta di fico d'India su un muro a secco", en: "Large prickly pear plant on a dry-stone wall" },
+        credit: { author: "Frank Vincentz", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Alc%C3%BAdia_-_Pol%C2%B7l%C3%A8ntia_-_Opuntia_ficus-indica_01_ies.jpg" } }
+    },
     plate: { type: "cladode", flower: "opuntia", fruit: "prickly", habit: "cactus" }
   },
   {
@@ -135,7 +181,18 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "da-verificare", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/quercus-robur.webp", status: "pending", ai: true, alt: { it: "Ramo di farnia con foglie lobate e ghiande peduncolate", en: "Pedunculate oak branch with lobed leaves and stalked acorns" } },
+    image: { file: "public/images/species/quercus-robur.jpg", status: "ready", ai: false, alt: { it: "Rametto di farnia con foglie lobate", en: "Pedunculate oak twig with lobed leaves" },
+      credit: { author: "Димитър Найденов / Dimìtar Nàydenov", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:%D0%9B%D0%B5%D1%82%D0%B5%D0%BD_%D0%B4%D1%8A%D0%B1_-_%D0%BB%D0%B8%D1%81%D1%82%D0%B0.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/quercus-robur-leaves.jpg", alt: { it: "Foglie lobate di farnia", en: "Lobed pedunculate oak leaves" },
+        credit: { author: "Franz Xaver", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Quercus_robur_1.jpg" } },
+      flowers: { file: "public/images/species/parts/quercus-robur-flowers.jpg", alt: { it: "Amenti maschili penduli di farnia", en: "Hanging male catkins of pedunculate oak" },
+        credit: { author: "Kenraiz Krzysztof Ziarnek", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Quercus_robur_fl_kz1.jpg" } },
+      fruits: { file: "public/images/species/parts/quercus-robur-fruits.jpg", alt: { it: "Ghiande di farnia su lunghi peduncoli", en: "Pedunculate oak acorns on long stalks" },
+        credit: { author: "Donar Reiskoffer", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0", source: "https://commons.wikimedia.org/wiki/File:20070722_Den_Blakken_(012).jpg" } },
+      habit: { file: "public/images/species/parts/quercus-robur-habit.jpg", alt: { it: "Farnia isolata in un prato", en: "Solitary pedunculate oak in a meadow" },
+        credit: { author: "Maxounette", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Chene_pedoncul%C3%A9.jpg" } }
+    },
     plate: { type: "branch", leaf: "lobed", L: 58, W: 22, n: 7, flower: "amento", fruit: "acorn-long", habit: "tree-round" }
   },
   {
@@ -162,7 +219,18 @@ FLORA.species = [
     sources: ["galasso", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "dimostrativo", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/robinia-pseudoacacia.webp", status: "pending", ai: true, alt: { it: "Ramo di robinia con foglie composte e grappoli di fiori bianchi", en: "Black locust branch with compound leaves and white flower clusters" } },
+    image: { file: "public/images/species/robinia-pseudoacacia.jpg", status: "ready", ai: false, alt: { it: "Grappolo pendente di fiori bianchi di robinia", en: "Hanging cluster of white black locust flowers" },
+      credit: { author: "Andrey Butko", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Flowers_of_Robinia_pseudoacacia.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/robinia-pseudoacacia-leaves.jpg", alt: { it: "Foglia composta di robinia con foglioline ovali", en: "Compound black locust leaf with oval leaflets" },
+        credit: { author: "HoHey22", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Black_Locust_Leaf_Close_Up.jpg" } },
+      flowers: { file: "public/images/species/parts/robinia-pseudoacacia-flowers.jpg", alt: { it: "Robinie in fioritura con grappoli bianchi", en: "Black locusts in flower with white clusters" },
+        credit: { author: "Chris Light", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Flower_Blk_Locust_2016-05-28_007.jpg" } },
+      fruits: { file: "public/images/species/parts/robinia-pseudoacacia-fruits.jpg", alt: { it: "Baccelli secchi di robinia, uno aperto con i semi", en: "Dry black locust pods, one open showing the seeds" },
+        credit: { author: "Simon A. Eugster", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Robinia_pseudoacacia_seeds.jpg" } },
+      habit: { file: "public/images/species/parts/robinia-pseudoacacia-habit.jpg", alt: { it: "Boschetto di robinie", en: "Black locust grove" },
+        credit: { author: "Famartin", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:2016-08-05_07_56_18_Clump_of_Black_Locust_saplings_in_a_field_between_NW_101_Terrace_and_NW_Polo_Drive_in_Kansas_City,_Platte_County,_Missouri.jpg" } }
+    },
     plate: { type: "branch", leaf: "pinnate", L: 70, W: 10, n: 6, flower: "raceme", fruit: "legume", habit: "tree-oval" }
   },
   {
@@ -188,7 +256,18 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale", "unesco"],
     quality: { overall: "dimostrativo", regions: "dimostrativo", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/fagus-sylvatica.webp", status: "pending", ai: true, alt: { it: "Ramo di faggio con foglie ovali e faggiole", en: "Beech branch with oval leaves and beechnuts" } },
+    image: { file: "public/images/species/fagus-sylvatica.jpg", status: "ready", ai: false, alt: { it: "Rametto di faggio con foglie ovali e cupole spinose dei frutti", en: "Beech twig with oval leaves and spiny fruit husks" },
+      credit: { author: "AnRo0002", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", source: "https://commons.wikimedia.org/wiki/File:20180708Fagus_sylvatica3.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/fagus-sylvatica-leaves.jpg", alt: { it: "Ramo di faggio con foglie verdi", en: "Beech branch with green leaves" },
+        credit: { author: "4028mdk09", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Bl%C3%A4tter_einer_Buche_Erlenbach.jpg" } },
+      flowers: { file: "public/images/species/parts/fagus-sylvatica-flowers.jpg", alt: { it: "Fiori maschili penduli di faggio", en: "Hanging male beech flowers" },
+        credit: { author: "Velela", license: "Public domain", licenseUrl: "", source: "https://commons.wikimedia.org/wiki/File:Beech_flowers.jpg" } },
+      fruits: { file: "public/images/species/parts/fagus-sylvatica-fruits.jpg", alt: { it: "Cupole spinose dei frutti di faggio", en: "Spiny beech fruit husks" },
+        credit: { author: "AnRo0002", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", source: "https://commons.wikimedia.org/wiki/File:20130617Rotbuche_Schwetzinger_Hardt3.jpg" } },
+      habit: { file: "public/images/species/parts/fagus-sylvatica-habit.jpg", alt: { it: "Faggio isolato al margine di un prato", en: "Solitary beech at the edge of a meadow" },
+        credit: { author: "T. Kebert", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Fagus_sylvatica_TK_2023-05-06_1.jpg" } }
+    },
     plate: { type: "branch", leaf: "ovate", L: 44, W: 20, n: 8, flower: "amento", fruit: "beechnut", habit: "tree-oval" }
   },
   {
@@ -217,7 +296,16 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale", "iucn", "piovesan"],
     quality: { overall: "dimostrativo", regions: "dimostrativo", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/pinus-heldreichii.webp", status: "pending", ai: true, alt: { it: "Pino loricato su una cresta rocciosa", en: "Bosnian pine on a rocky ridge" } },
+    image: { file: "public/images/species/pinus-heldreichii.jpg", status: "ready", ai: false, alt: { it: "Vecchio pino loricato dal tronco contorto su un pendio di montagna", en: "Old Bosnian pine with a twisted trunk on a mountain slope" },
+      credit: { author: "Jirka Dl", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Buni_i_Thores_1.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/pinus-heldreichii-leaves.jpg", alt: { it: "Aghi rigidi di pino loricato con un giovane cono violaceo", en: "Stiff Bosnian pine needles with a young purplish cone" },
+        credit: { author: "ubovich", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", source: "https://commons.wikimedia.org/wiki/File:2023-07-21_Pinus_heldreichii,_Konjic,_Herzegovina_3.jpg" } },
+      fruits: { file: "public/images/species/parts/pinus-heldreichii-fruits.jpg", alt: { it: "Giovani coni di pino loricato tra gli aghi", en: "Young Bosnian pine cones among the needles" },
+        credit: { author: "ubovich", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", source: "https://commons.wikimedia.org/wiki/File:2024-07-24_Pinus_heldreichii,_Park_Prirode_Blidinje,_Jablanica,_Herzegovina_5.jpg" } },
+      habit: { file: "public/images/species/parts/pinus-heldreichii-habit.jpg", alt: { it: "Pino loricato su un pendio roccioso", en: "Bosnian pine on a rocky slope" },
+        credit: { author: "Jirka Dl", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Buni_i_Thores.jpg" } }
+    },
     plate: { type: "needle", fruit: "cone", habit: "conifer-wind" }
   },
   {
@@ -247,7 +335,14 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "iucn", "habitat"],
     quality: { overall: "dimostrativo", regions: "dimostrativo", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/abies-nebrodensis.webp", status: "pending", ai: true, alt: { it: "Ramo di abete dei Nebrodi con aghi corti e coni eretti", en: "Sicilian fir branch with short needles and upright cones" } },
+    image: { file: "public/images/species/abies-nebrodensis.jpg", status: "ready", ai: false, alt: { it: "Abete dei Nebrodi in un ambiente montano soleggiato", en: "Sicilian fir in a sunny mountain setting" },
+      credit: { author: "Claudio Labita", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", source: "https://commons.wikimedia.org/wiki/File:Abies_nebrodensis_2.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/abies-nebrodensis-leaves.jpg", alt: { it: "Rametto di abete dei Nebrodi con aghi appiattiti", en: "Sicilian fir twig with flattened needles" },
+        credit: { author: "Topi Pigula", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Jedle_sicilsk%C3%A1_(jehlice)_z_arboreta_v_%C4%8Cesk%C3%A9m_r%C3%A1ji.jpg" } },
+      habit: { file: "public/images/species/parts/abies-nebrodensis-habit.jpg", alt: { it: "Abete dei Nebrodi su un versante montano", en: "Sicilian fir on a mountain slope" },
+        credit: { author: "lorca56 on Flickr", license: "CC BY-SA 2.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0", source: "https://commons.wikimedia.org/wiki/File:Abies_nebrodensis_Castellana_Sicula1.jpg" } }
+    },
     plate: { type: "needle", fir: true, fruit: "cone-up", habit: "conifer" }
   },
   {
@@ -273,7 +368,16 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "da-verificare", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/rhododendron-ferrugineum.webp", status: "pending", ai: true, alt: { it: "Arbusto di rododendro rosso in fiore", en: "Alpenrose shrub in flower" } },
+    image: { file: "public/images/species/rhododendron-ferrugineum.jpg", status: "ready", ai: false, alt: { it: "Fiori rosa intenso di rododendro ferrugineo tra le foglie", en: "Deep pink alpenrose flowers among the leaves" },
+      credit: { author: "Uoaei1", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Rhododendron_ferrugineum_Ankogel_20190730.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/rhododendron-ferrugineum-leaves.jpg", alt: { it: "Foglie lucide di rododendro ferrugineo con fiori", en: "Glossy alpenrose leaves with flowers" },
+        credit: { author: "Giacomo1970", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", source: "https://commons.wikimedia.org/wiki/File:Alpenrose_bluete.JPG" } },
+      flowers: { file: "public/images/species/parts/rhododendron-ferrugineum-flowers.jpg", alt: { it: "Fiori rosso-rosa di rododendro ferrugineo", en: "Red-pink alpenrose flowers" },
+        credit: { author: "SuperManu", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", source: "https://commons.wikimedia.org/wiki/File:Rhododendron_ferrugineum_2007.jpg" } },
+      habit: { file: "public/images/species/parts/rhododendron-ferrugineum-habit.jpg", alt: { it: "Arbusteto di rododendro in fiore in alta montagna", en: "Flowering alpenrose shrubland in the high mountains" },
+        credit: { author: "albert kok", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0", source: "https://commons.wikimedia.org/wiki/File:Alpenroos.jpg" } }
+    },
     plate: { type: "branch", leaf: "lanceolate", L: 34, W: 10, n: 12, flower: "rhodo", fruit: null, habit: "shrub-low" }
   },
   {
@@ -301,7 +405,18 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "da-verificare", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/leontopodium-nivale-alpinum.webp", status: "pending", ai: true, alt: { it: "Stella alpina con brattee bianche lanose tra le rocce", en: "Edelweiss with white woolly bracts among rocks" } },
+    image: { file: "public/images/species/leontopodium-nivale-alpinum.jpg", status: "ready", ai: false, alt: { it: "Due infiorescenze di stella alpina con brattee bianche lanose", en: "Two edelweiss flower heads with white woolly bracts" },
+      credit: { author: "Robert Flogaus-Faust", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", source: "https://commons.wikimedia.org/wiki/File:Leontopodium_nivale_subsp_alpinum_RF.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/leontopodium-nivale-alpinum-leaves.jpg", alt: { it: "Pianta di stella alpina con foglie strette e grigie", en: "Edelweiss plant with narrow grey leaves" },
+        credit: { author: "Franz Xaver", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", source: "https://commons.wikimedia.org/wiki/File:Leontopodium_alpinum1.jpg" } },
+      flowers: { file: "public/images/species/parts/leontopodium-nivale-alpinum-flowers.jpg", alt: { it: "Infiorescenza di stella alpina vista da vicino", en: "Close-up of an edelweiss flower head" },
+        credit: { author: "Michael Schmid", license: "CC BY-SA 2.0 at", licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0/at/deed.en", source: "https://commons.wikimedia.org/wiki/File:Leontopodium_alpinum_detail.jpg" } },
+      fruits: { file: "public/images/species/parts/leontopodium-nivale-alpinum-fruits.jpg", alt: { it: "Infruttescenze di stella alpina con il pappo", en: "Edelweiss fruiting heads with pappus" },
+        credit: { author: "Björn S...", license: "CC BY-SA 2.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0", source: "https://commons.wikimedia.org/wiki/File:Edelweiss_-_Leontopodium_alpinum_(22431325796).jpg" } },
+      habit: { file: "public/images/species/parts/leontopodium-nivale-alpinum-habit.jpg", alt: { it: "Stella alpina in un pascolo d'alta quota", en: "Edelweiss in a high-mountain pasture" },
+        credit: { author: "Thomas Mathis", license: "CC BY-SA 3.0", licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/", source: "https://commons.wikimedia.org/wiki/File:Leontopodium_alpina_with_Matterhorn.JPG" } }
+    },
     plate: { type: "rosette", leaf: "lanceolate", leaves: 7, leafL: 75, leafW: 9, flower: "edelweiss", stems: [[150, 118, 2.4]], habit: "herb", habitFlower: "edelweiss" }
   },
   {
@@ -330,7 +445,18 @@ FLORA.species = [
     sources: ["pignatti", "bartolucci", "galasso", "portale"],
     quality: { overall: "da-verificare", regions: "dimostrativo", flowering: "da-verificare" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/papaver-rhoeas.webp", status: "pending", ai: true, alt: { it: "Papaveri rossi in fiore con boccioli e capsule", en: "Red poppies in flower with buds and seed capsules" } },
+    image: { file: "public/images/species/papaver-rhoeas.jpg", status: "ready", ai: false, alt: { it: "Fiore di papavero rosso visto da vicino, con stami scuri al centro", en: "Close-up of a red poppy flower with dark stamens in the centre" },
+      credit: { author: "Robert Flogaus-Faust", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", source: "https://commons.wikimedia.org/wiki/File:Papaver_rhoeas_RF.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/papaver-rhoeas-leaves.jpg", alt: { it: "Pianta di papavero con foglie divise e un fiore", en: "Poppy plant with divided leaves and a flower" },
+        credit: { author: "Kolforn", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:2017-03-23_Common_Poppy_(Papaver_rhoeas),_Cerro_Grande,_Albufeira.JPG" } },
+      flowers: { file: "public/images/species/parts/papaver-rhoeas-flowers.jpg", alt: { it: "Fiore rosso di papavero con macchie scure", en: "Red poppy flower with dark blotches" },
+        credit: { author: "Gary Houston", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", source: "https://commons.wikimedia.org/wiki/File:20050613-019-poppy.jpg" } },
+      fruits: { file: "public/images/species/parts/papaver-rhoeas-fruits.jpg", alt: { it: "Capsula verde di papavero con il disco stigmatico", en: "Green poppy capsule with its stigmatic disc" },
+        credit: { author: "Alvesgaspar", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Papaver_March_2010-4.jpg" } },
+      habit: { file: "public/images/species/parts/papaver-rhoeas-habit.jpg", alt: { it: "Papaveri in fiore in un prato", en: "Poppies flowering in a meadow" },
+        credit: { author: "Imc", license: "Public domain", licenseUrl: "", source: "https://commons.wikimedia.org/wiki/File:CornPoppies.JPG" } }
+    },
     plate: { type: "herb", leaf: "lobed", leafL: 50, leafW: 14, flower: "poppy", fruit: "capsule", stems: [[110, 70, 1.6], [190, 110, 1.3], [150, 160, 1]], habit: "herb", habitFlower: "poppy" }
   },
   {
@@ -356,7 +482,16 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "da-verificare", flowering: "da-verificare" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/gentiana-acaulis.webp", status: "pending", ai: true, alt: { it: "Genziana di Koch con grande fiore blu a trombetta e rosetta di foglie", en: "Stemless gentian with a large blue trumpet flower and leaf rosette" } },
+    image: { file: "public/images/species/gentiana-acaulis.jpg", status: "ready", ai: false, alt: { it: "Fiori blu a trombetta di genziana di Koch tra l'erba alpina", en: "Blue trumpet-shaped stemless gentian flowers in alpine grass" },
+      credit: { author: "Uoaei1", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Gentiana_acaulis_Seckau_20160528.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/gentiana-acaulis-leaves.jpg", alt: { it: "Rosetta di foglie di genziana con un fiore", en: "Gentian leaf rosette with a flower" },
+        credit: { author: "Lalakmus", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Gentiana_acaulis_L._1.jpg" } },
+      flowers: { file: "public/images/species/parts/gentiana-acaulis-flowers.jpg", alt: { it: "Fiore blu di genziana con la gola macchiata di verde", en: "Blue gentian flower with a green-spotted throat" },
+        credit: { author: "brewbooks from near Seattle, USA", license: "CC BY-SA 2.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0", source: "https://commons.wikimedia.org/wiki/File:Flickr_-_brewbooks_-_Gentiana_acaulis_(1).jpg" } },
+      habit: { file: "public/images/species/parts/gentiana-acaulis-habit.jpg", alt: { it: "Gruppo di genziane fiorite tra l'erba", en: "Group of flowering gentians in grass" },
+        credit: { author: "Bernd Haynold", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Gentiana_acaulis_010706a.jpg" } }
+    },
     plate: { type: "rosette", leaf: "ovate", leaves: 6, leafL: 60, leafW: 20, flower: "gentian", stems: [[150, 300, 4.4]], habit: "herb", habitFlower: "gentian" }
   },
   {
@@ -382,7 +517,16 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "da-verificare", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/primula-vulgaris.webp", status: "pending", ai: true, alt: { it: "Primula comune con fiori giallo pallido e foglie rugose", en: "Primrose with pale yellow flowers and wrinkled leaves" } },
+    image: { file: "public/images/species/primula-vulgaris.jpg", status: "ready", ai: false, alt: { it: "Fiori giallo pallido di primula comune con foglie rugose", en: "Pale yellow primrose flowers with wrinkled leaves" },
+      credit: { author: "Robert Flogaus-Faust", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", source: "https://commons.wikimedia.org/wiki/File:Primula_vulgaris_RF.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/primula-vulgaris-leaves.jpg", alt: { it: "Foglie rugose di primula con un fiore", en: "Wrinkled primrose leaves with a flower" },
+        credit: { author: "David Anstiss", license: "CC BY-SA 2.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0", source: "https://commons.wikimedia.org/wiki/File:Another_sign_of_Spring_-_geograph.org.uk_-_1767104.jpg" } },
+      flowers: { file: "public/images/species/parts/primula-vulgaris-flowers.jpg", alt: { it: "Fiore giallo pallido di primula", en: "Pale yellow primrose flower" },
+        credit: { author: "AnemoneProjectors (talk)", license: "CC BY-SA 2.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0", source: "https://commons.wikimedia.org/wiki/File:Primrose_(Primula_vulgaris).jpg" } },
+      habit: { file: "public/images/species/parts/primula-vulgaris-habit.jpg", alt: { it: "Cespo di primule fiorite nel sottobosco", en: "Clump of flowering primroses in woodland" },
+        credit: { author: "Rept0n1x", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:In_the_Walled_Garden,_Royden_Park_(46).JPG" } }
+    },
     plate: { type: "rosette", leaf: "ovate", leaves: 8, leafL: 90, leafW: 22, flower: "primula", stems: [[110, 250, 1.6], [150, 220, 1.7], [190, 245, 1.6], [130, 290, 1.3], [175, 285, 1.3]], habit: "herb", habitFlower: "primula" }
   },
   {
@@ -409,7 +553,16 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "da-verificare", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/lavandula-stoechas.webp", status: "pending", ai: true, alt: { it: "Lavanda selvatica con spighe viola e brattee apicali", en: "French lavender with purple spikes and top bracts" } },
+    image: { file: "public/images/species/lavandula-stoechas.jpg", status: "ready", ai: false, alt: { it: "Piante di lavanda selvatica con spighe viola scuro e brattee apicali", en: "Wild lavender plants with dark purple spikes and top bracts" },
+      credit: { author: "Krzysztof Ziarnek, Kenraiz", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Lavandula_stoechas_kz10.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/lavandula-stoechas-leaves.jpg", alt: { it: "Pianta di lavanda selvatica con foglie strette e spighe", en: "Wild lavender plant with narrow leaves and spikes" },
+        credit: { author: "Hans Hillewaert", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Lavandula_stoechas_(flowers).jpg" } },
+      flowers: { file: "public/images/species/parts/lavandula-stoechas-flowers.jpg", alt: { it: "Spiga di lavanda selvatica con il ciuffo di brattee", en: "Wild lavender spike with its tuft of bracts" },
+        credit: { author: "Hans Hillewaert", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Lavandula_stoechas_(flower).jpg" } },
+      habit: { file: "public/images/species/parts/lavandula-stoechas-habit.jpg", alt: { it: "Arbusti di lavanda selvatica in fiore nella gariga", en: "Flowering wild lavender shrubs in garrigue" },
+        credit: { author: "Luis nunes alberto", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Lavandula_stoechas_.jpg" } }
+    },
     plate: { type: "herb", leaf: "lanceolate", leafL: 26, leafW: 4, flower: "lavender", fruit: null, stems: [[100, 175, 2], [150, 150, 2.2], [200, 185, 2], [125, 225, 1.7], [180, 230, 1.7]], habit: "shrub-lav", habitFlower: "lavender" }
   },
   {
@@ -435,7 +588,18 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "da-verificare", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/pancratium-maritimum.webp", status: "pending", ai: true, alt: { it: "Giglio di mare con fiori bianchi sulla duna", en: "Sea daffodil with white flowers on a dune" } },
+    image: { file: "public/images/species/pancratium-maritimum.jpg", status: "ready", ai: false, alt: { it: "Fiori bianchi di giglio di mare su una duna sabbiosa", en: "White sea daffodil flowers on a sand dune" },
+      credit: { author: "Zeynel Cebeci", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Pancratium_maritimum_-_Sea_daffodils_01-1.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/pancratium-maritimum-leaves.jpg", alt: { it: "Ciuffo di foglie nastriformi di giglio di mare sulla sabbia", en: "Tuft of strap-shaped sea daffodil leaves on sand" },
+        credit: { author: "Nevit Dilmen (talk)", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Pancratium_maritimum_1280285.JPG" } },
+      flowers: { file: "public/images/species/parts/pancratium-maritimum-flowers.jpg", alt: { it: "Fiore bianco di giglio di mare", en: "White sea daffodil flower" },
+        credit: { author: "Nevit Dilmen (talk)", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Pancratium_maritimum_1280286.JPG" } },
+      fruits: { file: "public/images/species/parts/pancratium-maritimum-fruits.jpg", alt: { it: "Capsule verdi di giglio di mare", en: "Green sea daffodil capsules" },
+        credit: { author: "Donkey shot", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Pancratium_maritimum_CBMen_04.jpg" } },
+      habit: { file: "public/images/species/parts/pancratium-maritimum-habit.jpg", alt: { it: "Giglio di mare fiorito su una duna", en: "Flowering sea daffodil on a dune" },
+        credit: { author: "falconaumanni", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Pancratium_maritimum_2.JPG" } }
+    },
     plate: { type: "rosette", leaf: "lanceolate", leaves: 8, leafL: 150, leafW: 7, spread: 60, flower: "pancratium", stems: [[125, 150, 3], [192, 190, 2.6]], habit: "herb", habitFlower: "pancratium" }
   },
   {
@@ -461,7 +625,18 @@ FLORA.species = [
     sources: ["bartolucci", "pignatti", "portale"],
     quality: { overall: "dimostrativo", regions: "da-verificare", flowering: "dimostrativo" },
     updated: "2026-10-15",
-    image: { file: "public/images/species/iris-pseudacorus.webp", status: "pending", ai: true, alt: { it: "Giaggiolo acquatico con fiori gialli lungo una sponda", en: "Yellow flag iris with yellow flowers on a bank" } },
+    image: { file: "public/images/species/iris-pseudacorus.jpg", status: "ready", ai: false, alt: { it: "Fiore giallo di giaggiolo acquatico con foglie a spada", en: "Yellow flag iris flower with sword-shaped leaves" },
+      credit: { author: "Myrabella", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Iris_pseudacorus_iris_des_marais.jpg" } },
+    photos: {
+      leaves: { file: "public/images/species/parts/iris-pseudacorus-leaves.jpg", alt: { it: "Foglie a spada di giaggiolo acquatico", en: "Sword-shaped yellow flag leaves" },
+        credit: { author: "Stefan.lefnaer", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Iris_pseudacorus_sl16.jpg" } },
+      flowers: { file: "public/images/species/parts/iris-pseudacorus-flowers.jpg", alt: { it: "Fiori gialli di giaggiolo acquatico", en: "Yellow flag iris flowers" },
+        credit: { author: "Richenza", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Hrazany._Okres_P%C3%ADsek._4.jpg" } },
+      fruits: { file: "public/images/species/parts/iris-pseudacorus-fruits.jpg", alt: { it: "Capsula verde di giaggiolo acquatico", en: "Green yellow flag seed capsule" },
+        credit: { author: "AnRo0002", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", source: "https://commons.wikimedia.org/wiki/File:20140607Iris_pseudacorus2.jpg" } },
+      habit: { file: "public/images/species/parts/iris-pseudacorus-habit.jpg", alt: { it: "Ciuffo di giaggioli in fiore lungo l'acqua", en: "Clump of flowering yellow flags by the water" },
+        credit: { author: "Karl Gruber", license: "CC BY-SA 3.0 at", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0/at/deed.en", source: "https://commons.wikimedia.org/wiki/File:Halbenrain_8917.JPG" } }
+    },
     plate: { type: "rosette", leaf: "lanceolate", leaves: 7, leafL: 250, leafW: 12, spread: 28, flower: "iris", stems: [[118, 130, 2.8], [190, 105, 2.5]], habit: "herb", habitFlower: "iris" }
   }
 ];

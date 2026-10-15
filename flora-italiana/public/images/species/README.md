@@ -5,11 +5,16 @@ tavola illustrata disegnata in codice, quindi non compaiono mai immagini rotte.
 
 ## Formato
 
-- Formato consigliato: **WebP** (va bene anche JPG), proporzione **3:4 verticale**, almeno **900 × 1200 px**, meno di 300 KB.
+- Formato: **JPG** (le foto attuali) o WebP, proporzione **3:4 verticale**, almeno **900 × 1200 px**, meno di 300 KB.
 - Nome del file = identificativo della specie (`id` in `js/data/species.js`) + estensione.
 - Soggetto centrato su sfondo neutro chiaro: le schede ritagliano l'immagine al centro.
 
-## File attesi
+## Fotografie attuali
+
+Tutte le 17 schede hanno una fotografia di Wikimedia Commons (`<id>.jpg`, 3:4, crediti nella scheda).
+Per sostituirne una, segui i passi qui sotto.
+
+## File attesi (elenco originale)
 
 Le prime sei, in ordine di priorità:
 
@@ -32,7 +37,9 @@ Le altre schede usano lo stesso schema: `quercus-ilex.webp`, `chamaerops-humilis
 1. Copia il file in questa cartella con il nome indicato sopra.
 2. In `js/data/species.js`, nella scheda della specie, cambia `status: "pending"` in `status: "ready"`.
 3. Se l'immagine **non** è generata con AI (per esempio una fotografia con licenza), imposta `ai: false`
-   e aggiungi la fonte e la licenza nella scheda.
+   e aggiungi i crediti, che il sito mostra nella didascalia:
+   `credit: { author: "Nome autore", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:..." }`.
+   Usa solo licenze libere (CC0, CC BY, CC BY-SA) e annota che l'immagine è stata ritagliata.
 4. Controlla il testo alternativo `alt` (italiano e inglese): deve descrivere ciò che si vede.
 5. Esegui `npm test`: il test controlla che ogni immagine segnata come `ready` esista davvero.
 

@@ -80,6 +80,15 @@
   document.addEventListener("submit", e => {
     if (e.target.id === "home-search") { e.preventDefault(); F.goCatalog({ q: $("#hq").value }); }
   });
+  /* Viaggio botanico: la tappa sotto il puntatore (o con il focus) evidenzia la sua fascia nel profilo, e viceversa */
+  const highlight = e => {
+    const el = e.target.closest && e.target.closest(".transect [data-belt]"); if (!el) return;
+    const box = el.closest(".transect"), on = e.type === "mouseover" || e.type === "focusin", id = el.dataset.belt;
+    box.classList.toggle("is-hover", on);
+    box.querySelectorAll("[data-belt]").forEach(x => x.classList.toggle("is-active", on && x.dataset.belt === id));
+  };
+  ["mouseover", "mouseout", "focusin", "focusout"].forEach(type => document.addEventListener(type, highlight));
+
   window.addEventListener("hashchange", () => {
     F.render();
     if (location.hash !== "#viaggio-habitat") window.scrollTo(0, 0);

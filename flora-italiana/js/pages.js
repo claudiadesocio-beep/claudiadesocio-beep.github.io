@@ -11,6 +11,12 @@ window.FLORA = window.FLORA || {};
       ? `<img src="${hero.file}" alt="${F.esc(F.name(hero.alt))}" onerror="this.onerror=null;this.src='public/images/fallback.svg'">`
       : F.illus.heroSVG(F.esc(F.name(hero.alt)));
     const heroCap = hero.status === "ready" && hero.ai ? t("img.ai") : t("img.illustration");
+    /* Senza immagine hero pronta si mostra il mosaico di foto delle schede; senza foto, la tavola disegnata */
+    const heroFig = (hero.status !== "ready" && C.heroMosaic(F.meta.mosaic || [])) || `<figure class="hero-figure">${heroImg}<figcaption>${heroCap}</figcaption></figure>`;
+    const quick = (href, key, count) => {
+      const ph = C.photo((F.meta.quick || {})[key]);
+      return `<a class="quick-item${ph ? " has-photo" : ""}" href="${href}">${ph ? `<span class="q-img">${C.photoImg(ph)}</span>` : ""}<span class="label">${count}</span><b>${t("quick." + key)}</b><span class="q-text">${t("quick." + key + ".text")}</span></a>`;
+    };
     const counts = C.regionCounts();
     const featured = ["abies-nebrodensis", "leontopodium-nivale-alpinum", "pancratium-maritimum", "robinia-pseudoacacia"].map(F.byId);
     return `
@@ -25,14 +31,14 @@ window.FLORA = window.FLORA || {};
         </form>
         <div class="chips" role="group" aria-label="${F.esc(t("search.suggested"))}">${["Stella alpina", "Edelweiss", "Quercus", "Primula", "Lamiaceae"].map(q => `<button class="chip" type="button" data-q="${q}">${q}</button>`).join("")}</div>
       </div>
-      <figure class="hero-figure">${heroImg}<figcaption>${heroCap}</figcaption></figure>
+      ${heroFig}
     </section>
 
     <nav class="wrap quick" aria-label="${F.esc(t("quick.title"))}">
-      <a class="quick-item" href="#catalogo"><span class="label">${t("quick.count", { n: F.species.length })}</span><b>${t("quick.catalog")}</b><span>${t("quick.catalog.text")}</span></a>
-      <a class="quick-item" href="#viaggio-habitat"><span class="label">${F.habitats.filter(h => h.route).length} ${F.getLang() === "it" ? "percorsi" : "routes"}</span><b>${t("quick.habitats")}</b><span>${t("quick.habitats.text")}</span></a>
-      <a class="quick-item" href="#viaggio"><span class="label">${F.belts.length} ${F.getLang() === "it" ? "fasce" : "belts"}</span><b>${t("quick.belts")}</b><span>${t("quick.belts.text")}</span></a>
-      <a class="quick-item" href="#regioni"><span class="label">${F.regions.length} ${F.getLang() === "it" ? "regioni" : "regions"}</span><b>${t("quick.regions")}</b><span>${t("quick.regions.text")}</span></a>
+      ${quick("#catalogo", "catalog", t("quick.count", { n: F.species.length }))}
+      ${quick("#viaggio-habitat", "habitats", t("quick.routes.count", { n: F.habitats.filter(h => h.route).length }))}
+      ${quick("#viaggio", "belts", t("quick.belts.count", { n: F.belts.length }))}
+      ${quick("#regioni", "regions", t("quick.regions.count", { n: F.regions.length }))}
     </nav>
 
     <section class="block tint"><div class="wrap">
@@ -68,9 +74,10 @@ window.FLORA = window.FLORA || {};
     let body;
     if (now.length) body = `<p class="lead-small">${t("now.text", { month: months[m - 1].toLowerCase() })}</p>${C.cards(now)}`;
     else {
-      let nm = m, next = [];
-      for (let i = 1; i <= 12 && !next.length; i++) { nm = (m + i - 1) % 12 + 1; next = F.species.filter(s => s.flowering && s.flowering.includes(nm)); }
-      body = `<p class="lead-small">${t("now.none", { month: months[m - 1].toLowerCase() })} ${t("now.next", { month: months[nm - 1].toLowerCase() })}</p>${C.cards(next)}`;
+      /* Nessuna fioritura nel mese corrente: le quattro specie che fioriranno prima */
+      const wait = sp => Math.min(...sp.flowering.map(f => (f - m + 12) % 12));
+      const next = F.species.filter(s => s.flowering).sort((a, b) => wait(a) - wait(b)).slice(0, 4);
+      body = `<p class="lead-small">${t("now.none", { month: months[m - 1].toLowerCase() })} ${t("now.upcoming")}</p>${C.cards(next)}`;
     }
     return C.secHead(t("now.eyebrow"), t("now.title"), "", `<a class="btn ghost" href="#fioriture">${t("now.calendar")}</a>`) + body;
   };
@@ -143,11 +150,13 @@ window.FLORA = window.FLORA || {};
     const namesIt = (sp.commonNames.it || []), namesEn = (sp.commonNames.en || []);
     const parts = [["leaves", "img.leaves"], ["flowers", "img.flowers"], ["fruits", "img.fruits"], ["habit", "img.habit"]];
     const gallery = parts.map(([k, lab]) => {
+      const ph = sp.photos && sp.photos[k];
+      if (ph) return `<figure class="ph photo"><div class="img"><img src="${ph.file}" alt="${F.esc(F.pick(ph.alt).value || t(lab))}" loading="lazy" decoding="async" width="480" height="480" onerror="this.onerror=null;this.src='public/images/fallback.svg'"></div><figcaption><b>${t(lab)}</b><span>${C.creditShort(ph.credit)}</span></figcaption></figure>`;
       const svg = F.illus.partSVG(sp, k);
       if (!svg) return `<figure class="ph na"><div class="img">${k === "flowers" && sp.gymnosperm ? t("img.na.gymno") : t("img.na.none")}</div><figcaption><b>${t(lab)}</b><span>${t("img.na.sub")}</span></figcaption></figure>`;
       return `<figure class="ph"><div class="img">${svg}</div><figcaption><b>${t(lab)}</b><span>${t("img.illustration")}</span></figcaption></figure>`;
     }).join("");
-    const mainCap = C.imageIsAI(sp) ? t("img.ai") : t("img.illustration");
+    const mainCap = C.imageCaption(sp);
     const regs = sp.regions.map(r => F.name(F.region(r).name)).sort(new Intl.Collator(lang).compare);
     const q = sp.quality;
     let cons;
@@ -208,9 +217,8 @@ window.FLORA = window.FLORA || {};
   /* ---------------- VIAGGIO BOTANICO ---------------- */
   Pg.journey = () => `<div class="wrap">
     <div class="page-hero">${C.sprig()}<span class="label">${t("journey.eyebrow")}</span><h1>${t("journey.title")}</h1><p class="lede">${t("journey.text")}</p></div>
-    <div class="transect">${C.transect()}</div><p class="note">${t("journey.note")}</p>
     <h2 class="sub">${t("journey.belts")}</h2>
-    <ol class="belt-steps">${F.belts.slice().reverse().map(b => `<li><a class="belt-step" href="#fascia-${b.id}"><span class="label">${F.name(b.technical)} · ${t("quick.count", { n: F.species.filter(s => s.belts.includes(b.id)).length })}</span><h3>${F.name(b.name)}</h3><p>${F.name(b.altitude)}</p></a></li>`).join("")}</ol>
+    <div class="transect">${C.transect({ full: true })}</div><p class="note">${t("journey.note")}</p>
     <h2 class="sub" id="habitat-routes">${t("journey.habitats")}</h2><p class="muted">${t("journey.habitats.text")}</p>
     ${C.habitatRoutes()}
     <h2 class="sub">${t("journey.routes")}</h2><p class="muted">${t("journey.routes.text")}</p>
@@ -275,28 +283,32 @@ window.FLORA = window.FLORA || {};
 
   /* ---------------- METODO ---------------- */
   Pg.method = () => {
-    const it = F.getLang() === "it";
+    const credited = F.species.filter(s => s.image.status === "ready" && !s.image.ai && s.image.credit)
+      .sort((a, b) => a.scientificName.localeCompare(b.scientificName));
+    /* Campo, tipo, chiave della nota in js/i18n */
     const rows = [
-      ["id", "string", it ? "Identificativo univoco e stabile, es. quercus-ilex. Una sola scheda per specie, valida per tutte le lingue." : "Unique, stable identifier, e.g. quercus-ilex. One entry per species, valid for every language."],
-      ["scientificName, author", "string", it ? "Nome scientifico latino, uguale in tutte le lingue." : "Latin scientific name, identical in every language."],
-      ["synonyms", "string[]", it ? "Nomi in uso nella letteratura." : "Names used in the literature."],
-      ["commonNames", "{ it: [], en: [] }", it ? "Nomi comuni per lingua; il primo è il principale." : "Common names per language; the first is the main one."],
-      ["family", "string", it ? "Famiglia botanica." : "Botanical family."],
-      ["origin, originNote, nativeRange", "enum + { it, en }", it ? "autoctona · endemica · naturalizzata · invasiva · non-verificata." : "native · endemic · naturalised · invasive · unverified."],
-      ["belts, habitats, routes", "id[]", it ? "Riferimenti ai vocabolari di js/data/taxonomy.js." : "References to the vocabularies in js/data/taxonomy.js."],
-      ["regions", "id[]", it ? "Regioni di presenza; in futuro una riga per regione con stato e fonte." : "Regions of occurrence; later one row per region with status and source."],
-      ["flowering", "int[] | null", it ? "Mesi 1–12; null per le gimnosperme." : "Months 1–12; null for gymnosperms."],
-      ["description, features, altitude, distribution", "{ it, en }", it ? "Testi bilingui; una lingua mancante viene segnalata." : "Bilingual texts; a missing language is flagged."],
-      ["conservation", "{ iucn, legal, note } | null", it ? "Compilato solo se documentato." : "Filled in only when documented."],
-      ["quality", "{ overall, regions, flowering }", it ? "verificato · dimostrativo · da-verificare." : "verified · demonstrative · to be verified."],
-      ["image", "{ file, status, ai, alt }", it ? "status \"ready\" solo quando il file esiste; ai = true per immagini generate." : "status \"ready\" only when the file exists; ai = true for generated images."],
-      ["sources, updated", "key[] + date", it ? "Chiavi della bibliografia condivisa e data di aggiornamento." : "Keys into the shared bibliography and update date."]
+      ["id", "string", "id"],
+      ["scientificName, author", "string", "scientificName"],
+      ["synonyms", "string[]", "synonyms"],
+      ["commonNames", "{ it: [], en: [] }", "commonNames"],
+      ["family", "string", "family"],
+      ["origin, originNote, nativeRange", "enum + { it, en }", "origin"],
+      ["belts, habitats, routes", "id[]", "vocab"],
+      ["regions", "id[]", "regions"],
+      ["flowering", "int[] | null", "flowering"],
+      ["description, features, altitude, distribution", "{ it, en }", "texts"],
+      ["conservation", "{ iucn, legal, note } | null", "conservation"],
+      ["quality", "{ overall, regions, flowering }", "quality"],
+      ["image", "{ file, status, ai, alt, credit }", "image"],
+      ["photos", "{ leaves, flowers, fruits, habit }", "photos"],
+      ["sources, updated", "key[] + date", "sources"]
     ];
     return `<div class="wrap"><div class="page-hero">${C.sprig()}<span class="label">${t("nav.method")}</span><h1>${t("method.title")}</h1><p class="lede">${t("method.lede")}</p><p>${t("method.p2")}</p></div>
       <section class="block"><h2>${t("method.quality")}</h2><dl class="facts">${Object.keys(F.quality).map(k => `<div class="fact"><dt>${C.qualityBadge(k)}</dt><dd>${F.name(F.quality[k].def)}</dd></div>`).join("")}</dl></section>
-      <section class="block"><h2>${t("method.images")}</h2><p class="prose">${t("method.images.text")}</p></section>
+      <section class="block"><h2>${t("method.images")}</h2><p class="prose">${t("method.images.text")}</p>
+        ${credited.length ? `<h3 class="sub">${t("method.credits")}</h3><ul class="credits">${credited.map(s => `<li><a href="#specie-${s.id}"><i>${s.scientificName}</i></a>: ${C.credit(s.image.credit)}${s.photos ? `<br><span class="small">${t("method.credits.parts")}: ${Object.entries(s.photos).map(([k, ph]) => `${t("img." + k)} — ${C.creditShort(ph.credit)}`).join("; ")}</span>` : ""}</li>`).join("")}</ul>` : ""}</section>
       <section class="block"><h2>${t("method.model")}</h2>
-        <div class="tbl"><table class="schema"><thead><tr><th>${t("method.field")}</th><th>${t("method.type")}</th><th>${t("method.notes")}</th></tr></thead><tbody>${rows.map(r => `<tr><td><code>${r[0]}</code></td><td><code>${F.esc(r[1])}</code></td><td>${F.esc(r[2])}</td></tr>`).join("")}</tbody></table></div></section>
+        <div class="tbl"><table class="schema"><thead><tr><th>${t("method.field")}</th><th>${t("method.type")}</th><th>${t("method.notes")}</th></tr></thead><tbody>${rows.map(r => `<tr><td><code>${r[0]}</code></td><td><code>${F.esc(r[1])}</code></td><td>${F.esc(t("method.f." + r[2]))}</td></tr>`).join("")}</tbody></table></div></section>
       <section class="block"><h2>${t("method.sources")}</h2><ol class="sources">${Object.values(F.sources).map(s => `<li>${F.esc(s.text)}${s.url ? ` <a href="${s.url}" target="_blank" rel="noopener">${t("sp.sources.open")} ↗</a>` : ""}</li>`).join("")}</ol></section>
       <section class="block"><h2>${t("method.origins")}</h2><dl class="facts">${Object.values(F.origins).map(o => `<div class="fact"><dt>${F.name(o.name)}</dt><dd>${F.name(o.def)}</dd></div>`).join("")}</dl></section></div>`;
   };

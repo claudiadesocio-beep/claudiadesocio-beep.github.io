@@ -65,6 +65,18 @@ F.species.forEach(s => {
   check(s.image && s.image.file && ["pending", "ready"].includes(s.image.status), `${w}: oggetto image non valido`);
   bi(s.image.alt, `${w}.image.alt`);
   if (s.image.status === "ready") check(existsSync(path.join(root, s.image.file)), `${w}: immagine "ready" ma file assente: ${s.image.file}`);
+  if (s.image.status === "ready" && !s.image.ai) {
+    const cr = s.image.credit || {};
+    check(cr.author && cr.license && /^https?:\/\//.test(cr.source || ""), `${w}: fotografia senza crediti completi (autore, licenza, fonte)`);
+  }
+  Object.entries(s.photos || {}).forEach(([part, ph]) => {
+    const wp = `${w}.photos.${part}`;
+    check(["leaves", "flowers", "fruits", "habit"].includes(part), `${wp}: parte sconosciuta`);
+    check(ph.file && existsSync(path.join(root, ph.file)), `${wp}: file assente: ${ph.file}`);
+    bi(ph.alt, `${wp}.alt`);
+    const cr = ph.credit || {};
+    check(cr.author && cr.license && /^https?:\/\//.test(cr.source || ""), `${wp}: crediti incompleti (autore, licenza, fonte)`);
+  });
 });
 check(F.species.length >= 8, "servono almeno 8 specie");
 check(F.species.some(s => s.origin === "naturalizzata" || s.origin === "invasiva"), "serve almeno una specie alloctona");
@@ -79,10 +91,24 @@ F.guides.forEach(g => {
 });
 
 // Immagine della homepage e file statici
+// Foto usate dalla homepage: devono esistere nelle schede (così i crediti sono già registrati)
+const photoRef = (ref, where) => {
+  const sp = F.species.find(s => s.id === ref.species);
+  const ph = sp && (ref.part === "main" ? (sp.image.status === "ready" && !sp.image.ai ? sp.image : null) : (sp.photos || {})[ref.part]);
+  check(ph && ph.credit, `${where}: foto "${ref.species}/${ref.part}" non trovata nelle schede`);
+};
+(F.meta.mosaic || []).forEach((r, i) => photoRef(r, `homepage mosaico ${i}`));
+Object.entries(F.meta.quick || {}).forEach(([k, r]) => photoRef(r, `homepage accesso rapido ${k}`));
 check(existsSync(path.join(root, "public/images/fallback.svg")), "manca public/images/fallback.svg");
 if (F.meta.hero.status === "ready") check(existsSync(path.join(root, F.meta.hero.file)), "immagine hero 'ready' ma file assente");
 const html = readFileSync(path.join(root, "index.html"), "utf8");
 [...html.matchAll(/(?:src|href)="((?:js|css|public)\/[^"?]+)(?:\?[^"]*)?"/g)].forEach(m => check(existsSync(path.join(root, m[1])), `index.html: file mancante ${m[1]}`));
+
+// La logica non sceglie testi in base a una lingua fissa: i testi stanno in js/i18n, così si possono aggiungere altre lingue
+for (const f of ["js/core.js", "js/components.js", "js/pages.js", "js/main.js", "js/illustrations.js"]) {
+  const src = readFileSync(path.join(root, f), "utf8");
+  check(!/(getLang\(\)|\blang)\s*===?\s*["'][a-z]{2}["']/.test(src), `${f}: testo scelto con un confronto sulla lingua; spostarlo in js/i18n`);
+}
 
 console.log(`\n${passed} controlli superati, ${failed} falliti.`);
 process.exit(failed ? 1 : 0);

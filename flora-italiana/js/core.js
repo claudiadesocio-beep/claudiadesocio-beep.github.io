@@ -64,7 +64,7 @@ window.FLORA = window.FLORA || {};
   F.guide = id => F.guides.find(g => g.id === id);
   F.name = obj => F.pick(obj).value;                              // nome di un vocabolario { it, en }
   F.commonName = sp => { const r = F.pick(sp.commonNames); return { value: r.value ? r.value[0] : sp.scientificName, missing: r.missing }; };
-  F.fmtDate = d => new Date(d + "T12:00:00").toLocaleDateString(lang === "it" ? "it-IT" : "en-GB", { day: "numeric", month: "long", year: "numeric" });
+  F.fmtDate = d => new Date(d + "T12:00:00").toLocaleDateString(F.t("lang.locale"),{ day: "numeric", month: "long", year: "numeric" });
   F.currentMonth = () => new Date().getMonth() + 1;
 
   /* ---------- preferiti ---------- */

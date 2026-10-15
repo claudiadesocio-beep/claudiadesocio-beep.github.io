@@ -3,7 +3,7 @@
 window.FLORA = window.FLORA || {};
 
 FLORA.meta = {
-  version: "0.2.0",
+  version: "0.2.1",
   updated: "2026-10-15",
   // Immagine principale della homepage: impostare status "ready" dopo aver copiato il file.
   hero: {
@@ -14,6 +14,21 @@ FLORA.meta = {
       it: "Tavola illustrativa con fiori spontanei italiani",
       en: "Illustrative plate of Italian wild flowers"
     }
+  },
+  // Homepage: finché l'immagine hero non è pronta si mostra un mosaico di foto delle schede (il primo riquadro è il più grande).
+  // Le foto si indicano come { species, part } (part: main | leaves | flowers | fruits | habit): i crediti restano quelli delle schede.
+  mosaic: [
+    { species: "papaver-rhoeas", part: "main" },
+    { species: "leontopodium-nivale-alpinum", part: "main" },
+    { species: "gentiana-acaulis", part: "main" },
+    { species: "pancratium-maritimum", part: "main" },
+    { species: "lavandula-stoechas", part: "main" }
+  ],
+  quick: {
+    catalog: { species: "iris-pseudacorus", part: "flowers" },
+    habitats: { species: "pancratium-maritimum", part: "habit" },
+    belts: { species: "rhododendron-ferrugineum", part: "habit" },
+    regions: { species: "myrtus-communis", part: "habit" }
   }
 };
 
@@ -79,7 +94,7 @@ FLORA.belts = [
             en: "Twisted shrublands of alpenrose, juniper and mountain pine, then grasslands, cliffs, screes and snowbeds. The growing season lasts only a few months." } }
 ];
 
-/* Habitat. route: true = compare tra i percorsi del "Viaggio botanico" */
+/* Habitat. route: true = compare tra i percorsi del "Viaggio botanico" (con una vignetta disegnata in js/components.js) */
 FLORA.habitats = [
   { id: "boschi", route: true, name: { it: "Boschi", en: "Woodlands" },
     text: { it: "Dalle leccete costiere alle faggete montane: boschi di latifoglie e di conifere.", en: "From coastal holm-oak woods to montane beech forests: broadleaf and conifer woodlands." } },
