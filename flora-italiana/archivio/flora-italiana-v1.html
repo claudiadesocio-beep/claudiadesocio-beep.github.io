@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flora Italiana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: tavola d'erbario — fascia verde bosco in testa, fogli avorio, etichette in mono come cartellini d'erbario */
+:root{
+  --bosco:#24412f; --bosco-2:#2f5540; --salvia:#8fa486; --salvia-soft:#e3e9db;
+  --avorio:#f6f2e6; --carta:#fcfaf3; --terracotta:#b0532c; --terracotta-soft:#f3dfd3;
+  --ink:#1c2820; --muted:#5a685d; --line:#d9d4c2;
+  --head-bg:#24412f; --head-fg:#f6f2e6; --accent-text:#24412f;
+  --leaf:#4f7a54; --leaf-2:#9ab38e; --leaf-ink:#2a4a32; --petal:#fffdf6; --giallo:#d8a531; --rosa:#c9516d; --berry:#36385e; --bruno:#7a5434;
+  --f-display:"Cormorant Garamond", "Garamond", "Times New Roman", serif;
+  --f-body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:4px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bosco:#a8c7a0; --bosco-2:#8fb487; --salvia:#7d9474; --salvia-soft:#25332a;
+  --avorio:#151d18; --carta:#1b251f; --terracotta:#e08a63; --terracotta-soft:#3a2519;
+  --ink:#ebe7da; --muted:#a6b0a4; --line:#344238;
+  --head-bg:#0f1712; --head-fg:#ebe7da; --accent-text:#b9d6b0;
+  --leaf:#7fa77f; --leaf-2:#56705a; --leaf-ink:#c4dcbc; --petal:#f1ece0; --giallo:#e2b64e; --rosa:#e07890; --berry:#9a9fe0; --bruno:#c79a6e;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bosco:#a8c7a0; --bosco-2:#8fb487; --salvia:#7d9474; --salvia-soft:#25332a;
+  --avorio:#151d18; --carta:#1b251f; --terracotta:#e08a63; --terracotta-soft:#3a2519;
+  --ink:#ebe7da; --muted:#a6b0a4; --line:#344238;
+  --head-bg:#0f1712; --head-fg:#ebe7da; --accent-text:#b9d6b0;
+  --leaf:#7fa77f; --leaf-2:#56705a; --leaf-ink:#c4dcbc; --petal:#f1ece0; --giallo:#e2b64e; --rosa:#e07890; --berry:#9a9fe0; --bruno:#c79a6e;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--avorio);color:var(--ink);font-family:var(--f-body);font-size:1.0625rem;line-height:1.6}
+a{color:var(--accent-text)}
+:focus-visible{outline:3px solid var(--terracotta);outline-offset:2px}
+.skip{position:absolute;left:-999px;top:0;background:var(--carta);padding:.5rem 1rem;z-index:20}
+.skip:focus{left:1rem}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.4rem,6vw,4.2rem)}
+h2{font-size:clamp(1.8rem,3.6vw,2.6rem)}
+h3{font-size:1.45rem}
+p{margin:0}
+.sci{font-style:italic}
+.auth{font-style:normal;color:var(--muted);font-size:.85em}
+.label{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px}
+@media (min-width:700px){.wrap{padding-inline:32px}}
+.muted{color:var(--muted)}
+
+/* header */
+header.site{background:var(--head-bg);color:var(--head-fg);position:sticky;top:env(safe-area-inset-top,0px);z-index:10}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:.75rem;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:.6rem;color:var(--head-fg);text-decoration:none}
+.brand b{font-family:var(--f-display);font-size:1.7rem;font-weight:700;letter-spacing:.01em}
+.brand span{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+nav.main{display:flex;gap:.2rem;flex-wrap:wrap}
+nav.main a{color:var(--head-fg);text-decoration:none;font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;padding:.45rem .7rem;border-radius:var(--r);opacity:.85}
+nav.main a:hover{opacity:1;background:rgba(255,255,255,.08)}
+nav.main a[aria-current="page"]{opacity:1;box-shadow:inset 0 -2px 0 var(--terracotta)}
+
+main{padding-block:0 4rem}
+section.block{padding-block:clamp(2.5rem,6vw,4.5rem)}
+section.block + section.block{border-top:1px solid var(--line)}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:1rem;flex-wrap:wrap;margin-bottom:1.8rem}
+.sec-head p{max-width:60ch;color:var(--muted);margin-top:.5rem}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1fr;gap:2rem;padding-block:2.5rem 3rem;align-items:center}
+@media (min-width:900px){.hero{grid-template-columns:1.05fr .95fr;gap:3.5rem}}
+.hero-text{min-width:0;display:grid;gap:1.3rem}
+.hero-text .lede{font-size:1.2rem;max-width:56ch}
+.hero-text h1 em{font-style:italic;color:var(--terracotta)}
+.sheet{background:var(--carta);border:1px solid var(--line);padding:1.2rem 1.2rem 1rem;position:relative;max-width:520px;width:100%;justify-self:center;box-shadow:0 1px 0 var(--line),0 18px 40px -28px rgba(20,35,25,.45)}
+.sheet .tape{position:absolute;width:70px;height:20px;background:var(--salvia-soft);opacity:.9;border:1px solid var(--line)}
+.sheet .t1{top:-9px;left:24px;transform:rotate(-4deg)}
+.sheet .t2{bottom:70px;right:-14px;transform:rotate(80deg)}
+.sheet svg{width:100%;height:auto;display:block}
+.tag{border:1px solid var(--ink);padding:.55rem .75rem;font-family:var(--f-mono);font-size:.72rem;line-height:1.5;margin-left:auto;max-width:280px;background:var(--carta)}
+.tag .sci{font-family:var(--f-display);font-size:1.15rem;letter-spacing:0;text-transform:none}
+
+/* search */
+form.search{display:flex;gap:.5rem;flex-wrap:wrap;max-width:560px}
+form.search input{flex:1 1 240px;min-width:0;font:inherit;padding:.8rem 1rem;border:1.5px solid var(--bosco);background:var(--carta);color:var(--ink);border-radius:var(--r)}
+.btn{font-family:var(--f-mono);font-size:.8rem;letter-spacing:.07em;text-transform:uppercase;padding:.8rem 1.2rem;border-radius:var(--r);border:1.5px solid var(--bosco);background:var(--bosco);color:var(--avorio);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem}
+:root .btn{color:var(--carta)}
+.btn.ghost{background:transparent;color:var(--accent-text)}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{font:inherit;font-size:.88rem;border:1px solid var(--line);background:var(--carta);color:var(--ink);padding:.3rem .7rem;border-radius:999px;cursor:pointer;text-decoration:none}
+.chip:hover{border-color:var(--salvia)}
+.chip[aria-pressed="true"]{background:var(--bosco);border-color:var(--bosco);color:var(--carta)}
+
+/* transect */
+.transect{background:var(--carta);border:1px solid var(--line);padding:1rem;overflow-x:auto}
+.transect svg{display:block;width:100%;min-width:640px;height:auto}
+.band{cursor:pointer}
+.band path{transition:opacity .2s}
+.band:hover path,.band:focus path{opacity:.75}
+.band text{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;fill:var(--ink)}
+.fasce-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1.2rem}
+.fascia-card{display:grid;gap:.4rem;padding:1rem 0;border-top:2px solid var(--bosco);text-decoration:none;color:var(--ink)}
+.fascia-card h3{font-size:1.3rem;color:var(--accent-text)}
+.fascia-card p{font-size:.95rem;color:var(--muted)}
+
+/* map */
+.map-grid{display:grid;grid-template-columns:1fr;gap:2rem;align-items:start}
+@media (min-width:860px){.map-grid{grid-template-columns:minmax(0,420px) 1fr;gap:3rem}}
+.tilemap{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;max-width:420px;width:100%}
+.tile{aspect-ratio:1;max-width:100%;border:1px solid var(--line);background:var(--salvia-soft);color:var(--ink);font-family:var(--f-mono);font-size:.72rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:3px;cursor:pointer;padding:0}
+.tile b{font-weight:500;font-size:.8rem}
+.tile small{font-size:.62rem;color:var(--muted)}
+.tile:hover,.tile[aria-pressed="true"]{background:var(--bosco);color:var(--carta);border-color:var(--bosco)}
+.tile:hover small,.tile[aria-pressed="true"] small{color:var(--carta)}
+.tile.on{background:var(--leaf-2)}
+.tile.off{background:transparent;opacity:.55}
+.sea{grid-column:1/-1;font-family:var(--f-mono);font-size:.65rem;color:var(--muted);letter-spacing:.08em}
+.percorsi{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0;border-top:1px solid var(--line)}
+.percorso{display:grid;grid-template-columns:auto 1fr;gap:.2rem 1rem;padding:1rem .2rem;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.percorso .n{font-family:var(--f-mono);font-size:.75rem;color:var(--terracotta);grid-row:span 2;padding-top:.35rem}
+.percorso h3{font-size:1.35rem}
+.percorso p{font-size:.92rem;color:var(--muted)}
+.percorso:hover h3{color:var(--terracotta)}
+
+/* species cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.4rem}
+.card{background:var(--carta);border:1px solid var(--line);display:grid;grid-template-rows:auto 1fr;text-decoration:none;color:var(--ink);min-width:0;transition:transform .15s}
+.card:hover{transform:translateY(-2px);border-color:var(--salvia)}
+.card .plate{aspect-ratio:3/4;max-width:100%;border-bottom:1px solid var(--line);padding:.6rem;display:flex}
+.card .plate svg{width:100%;height:100%}
+.card .body{padding:.9rem 1rem 1rem;display:grid;gap:.35rem;align-content:start}
+.card h3{font-size:1.4rem}
+.card .sci{font-family:var(--f-display);font-size:1.05rem}
+.card .meta{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.35rem}
+.badge{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.07em;text-transform:uppercase;padding:.2rem .45rem;border-radius:2px;border:1px solid var(--salvia);color:var(--ink);white-space:nowrap}
+.badge.autoctona{background:var(--salvia-soft);border-color:var(--salvia)}
+.badge.endemica{background:var(--bosco);border-color:var(--bosco);color:var(--carta)}
+.badge.naturalizzata{border-color:var(--terracotta);color:var(--terracotta)}
+.badge.invasiva{background:var(--terracotta);border-color:var(--terracotta);color:var(--carta)}
+.badge.cons{border-style:dashed;border-color:var(--terracotta);color:var(--terracotta)}
+
+.guides{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.6rem}
+.guide{display:grid;gap:.5rem;text-decoration:none;color:var(--ink);padding:1.2rem;border:1px solid var(--line);background:var(--carta)}
+.guide h3{font-size:1.4rem}
+.guide p{color:var(--muted);font-size:.95rem}
+
+/* catalogo */
+.catalog{display:grid;grid-template-columns:1fr;gap:2rem;padding-top:2rem}
+@media (min-width:920px){.catalog{grid-template-columns:270px minmax(0,1fr)}}
+.filters{display:grid;gap:1.2rem;align-content:start;background:var(--carta);border:1px solid var(--line);padding:1.1rem}
+@media (min-width:920px){.filters{position:sticky;top:5rem}}
+.filters details summary{cursor:pointer;font-family:var(--f-mono);font-size:.8rem;letter-spacing:.07em;text-transform:uppercase}
+.field{display:grid;gap:.35rem}
+.field label,.field legend{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.field input[type=search],.field select{font:inherit;font-size:.95rem;padding:.55rem .6rem;border:1px solid var(--line);background:var(--avorio);color:var(--ink);border-radius:var(--r);width:100%}
+fieldset{border:0;padding:0;margin:0;display:grid;gap:.35rem}
+.months{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.months button{font-family:var(--f-mono);font-size:.7rem;padding:.35rem 0;border:1px solid var(--line);background:var(--avorio);color:var(--ink);border-radius:2px;cursor:pointer}
+.months button[aria-pressed="true"]{background:var(--bosco);color:var(--carta);border-color:var(--bosco)}
+.check{display:flex;gap:.5rem;align-items:center;font-size:.95rem}
+.results-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.empty{padding:2rem;border:1px dashed var(--line);text-align:center;color:var(--muted)}
+
+/* scheda */
+.crumbs{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;padding-top:1.5rem;color:var(--muted)}
+.crumbs a{color:var(--muted)}
+.sp-head{display:grid;gap:.6rem;padding-block:1.2rem 2rem;border-bottom:1px solid var(--line)}
+.sp-head .sci{font-family:var(--f-display);font-size:clamp(1.4rem,3vw,1.9rem)}
+.sp-head .row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.sp-grid{display:grid;grid-template-columns:1fr;gap:2.5rem;padding-top:2rem}
+@media (min-width:960px){.sp-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}}
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem}
+.ph{margin:0;background:var(--carta);border:1px solid var(--line);display:grid;grid-template-rows:auto auto}
+.ph .img{aspect-ratio:1;max-width:100%;display:flex;align-items:center;justify-content:center;padding:.8rem}
+.ph .img svg{width:100%;height:100%}
+.ph figcaption{border-top:1px solid var(--line);padding:.5rem .7rem;display:grid;gap:.1rem}
+.ph figcaption b{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+.ph figcaption span{font-size:.78rem;color:var(--muted)}
+.ph.na .img{background:repeating-linear-gradient(135deg,transparent 0 9px,var(--salvia-soft) 9px 10px);font-family:var(--f-mono);font-size:.72rem;color:var(--muted);text-align:center}
+.prose{display:grid;gap:1rem;max-width:66ch}
+.facts{display:grid;gap:0;border-top:1px solid var(--line)}
+.fact{display:grid;grid-template-columns:9.5rem 1fr;gap:1rem;padding:.75rem 0;border-bottom:1px solid var(--line)}
+.fact dt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:.25rem}
+.fact dd{margin:0;min-width:0}
+@media (max-width:480px){.fact{grid-template-columns:1fr;gap:.2rem}}
+.panel{display:grid;gap:1rem}
+.panel + .panel{margin-top:2.2rem}
+ul.keys{margin:0;padding:0;list-style:none;display:grid;gap:.6rem}
+ul.keys li{padding-left:1.4rem;position:relative}
+ul.keys li::before{content:"";position:absolute;left:0;top:.65em;width:.6rem;height:1px;background:var(--terracotta)}
+.calendar{display:grid;grid-template-columns:repeat(12,1fr);gap:3px}
+.calendar div{font-family:var(--f-mono);font-size:.62rem;text-align:center;padding:.45rem 0;border:1px solid var(--line);color:var(--muted);background:var(--carta)}
+.calendar div.on{background:var(--terracotta);border-color:var(--terracotta);color:var(--carta)}
+.note{font-size:.85rem;color:var(--muted);border-left:2px solid var(--salvia);padding-left:.8rem}
+.minimap .tilemap{max-width:300px}
+.minimap .tile{cursor:default;font-size:.6rem}
+.minimap .tile b{font-size:.66rem}
+.cons-box{border:1px solid var(--terracotta);background:var(--terracotta-soft);padding:1rem;display:grid;gap:.4rem}
+.sources{margin:0;padding-left:1.2rem;display:grid;gap:.5rem;font-size:.92rem}
+.stamp{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.05em;display:flex;gap:1rem;flex-wrap:wrap;color:var(--muted);padding:.8rem 0;border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}
+.stamp b{color:var(--terracotta);font-weight:500}
+
+.page-hero{padding-block:2rem 1.5rem;display:grid;gap:.9rem;max-width:72ch}
+.page-hero .lede{font-size:1.15rem}
+table.schema{border-collapse:collapse;width:100%;font-size:.9rem}
+table.schema th,table.schema td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+table.schema th{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+table.schema code{font-family:var(--f-mono);font-size:.82rem}
+.tbl{overflow-x:auto}
+
+footer.site{background:var(--head-bg);color:var(--head-fg);padding-block:2.5rem}
+footer.site .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;font-size:.92rem}
+footer.site a{color:var(--head-fg)}
+footer.site .label{color:var(--head-fg);opacity:.7}
+
+/* svg plates */
+.lf{fill:var(--leaf);stroke:var(--leaf-ink);stroke-width:.8}
+.lf2{fill:var(--leaf-2);stroke:var(--leaf-ink);stroke-width:.8}
+.vein{stroke:var(--leaf-ink);stroke-width:.6;fill:none;opacity:.7}
+.stem{stroke:var(--bruno);fill:none;stroke-linecap:round}
+.petal{fill:var(--petal);stroke:var(--leaf-ink);stroke-width:.7}
+.yel{fill:var(--giallo);stroke:var(--bruno);stroke-width:.6}
+.pink{fill:var(--rosa);stroke:var(--leaf-ink);stroke-width:.6}
+.berry{fill:var(--berry);stroke:var(--leaf-ink);stroke-width:.6}
+.brown{fill:var(--bruno);stroke:var(--leaf-ink);stroke-width:.6}
+.terra{fill:var(--terracotta);stroke:var(--leaf-ink);stroke-width:.6}
+.wool{fill:var(--petal);stroke:var(--muted);stroke-width:.7}
+.needle{stroke:var(--leaf);stroke-width:1.2;stroke-linecap:round;fill:none}
+.ground{stroke:var(--muted);stroke-width:1;fill:none;stroke-dasharray:3 3}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<a class="skip" href="#contenuto">Vai al contenuto</a>
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="#home"><b>Flora Italiana</b><span>Enciclopedia illustrata</span></a>
+    <nav class="main" aria-label="Navigazione principale">
+      <a href="#home" data-nav="home">Home</a>
+      <a href="#catalogo" data-nav="catalogo">Catalogo</a>
+      <a href="#fasce" data-nav="fasce">Fasce</a>
+      <a href="#percorsi" data-nav="percorsi">Percorsi</a>
+      <a href="#guide" data-nav="guide">Guide</a>
+      <a href="#metodo" data-nav="metodo">Metodo e fonti</a>
+    </nav>
+  </div>
+</header>
+<main id="contenuto" tabindex="-1"></main>
+<footer class="site">
+  <div class="wrap cols">
+    <div><p class="label">Flora Italiana</p><p>Prototipo dimostrativo di un'enciclopedia della flora spontanea italiana. Le schede sono bozze: ogni dato va validato sulle fonti indicate prima della pubblicazione.</p></div>
+    <div><p class="label">Riferimenti principali</p><p>Checklist della flora vascolare autoctona e alloctona d'Italia · Pignatti, <i>Flora d'Italia</i> 2ª ed. · Portale della Flora d'Italia</p></div>
+    <div><p class="label">Sezioni</p><p><a href="#catalogo">Catalogo</a> · <a href="#fasce">Fasce altitudinali</a> · <a href="#percorsi">Percorsi</a> · <a href="#metodo">Metodo e struttura dati</a></p></div>
+  </div>
+</footer>
+
+<script>
+/* ============ DATI ============ */
+const AGGIORNAMENTO = "2026-10-14";
+const MESI = ["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
+
+const REGIONI = [
+ {id:"vda",nome:"Valle d'Aosta",ab:"VdA",c:1,r:1},
+ {id:"lom",nome:"Lombardia",ab:"Lom",c:2,r:1},
+ {id:"taa",nome:"Trentino-Alto Adige",ab:"TAA",c:3,r:1},
+ {id:"ven",nome:"Veneto",ab:"Ven",c:4,r:1},
+ {id:"fvg",nome:"Friuli Venezia Giulia",ab:"FVG",c:5,r:1},
+ {id:"pie",nome:"Piemonte",ab:"Pie",c:1,r:2},
+ {id:"emr",nome:"Emilia-Romagna",ab:"E-R",c:3,r:2},
+ {id:"lig",nome:"Liguria",ab:"Lig",c:2,r:2},
+ {id:"tos",nome:"Toscana",ab:"Tos",c:3,r:3},
+ {id:"umb",nome:"Umbria",ab:"Umb",c:4,r:3},
+ {id:"mar",nome:"Marche",ab:"Mar",c:5,r:3},
+ {id:"laz",nome:"Lazio",ab:"Laz",c:4,r:4},
+ {id:"abr",nome:"Abruzzo",ab:"Abr",c:5,r:4},
+ {id:"mol",nome:"Molise",ab:"Mol",c:6,r:4},
+ {id:"sar",nome:"Sardegna",ab:"Sar",c:1,r:5},
+ {id:"cam",nome:"Campania",ab:"Cam",c:5,r:5},
+ {id:"pug",nome:"Puglia",ab:"Pug",c:6,r:5},
+ {id:"bas",nome:"Basilicata",ab:"Bas",c:5,r:6},
+ {id:"cal",nome:"Calabria",ab:"Cal",c:5,r:7},
+ {id:"sic",nome:"Sicilia",ab:"Sic",c:4,r:8}
+];
+const ALL_REG = REGIONI.map(r=>r.id);
+
+const FASCE = [
+ {id:"mediterranea",nome:"Mediterranea e costiera",breve:"Coste, isole e basse colline",quota:"dal livello del mare a qualche centinaio di metri; più in alto nel Mezzogiorno",
+  testo:"Clima mediterraneo con estati calde e aride e inverni miti. Leccete, macchia, garighe, rupi e dune costiere. Qui dominano le piante sempreverdi a foglie coriacee, adattate alla siccità estiva."},
+ {id:"planiziale",nome:"Planiziale",breve:"Pianure alluvionali",quota:"pianure e fondovalle",
+  testo:"Suoli profondi e falda vicina alla superficie. La vegetazione potenziale è il bosco di farnia e carpino bianco, con boschi ripariali e zone umide; oggi è in gran parte sostituita da coltivi e centri abitati."},
+ {id:"collinare",nome:"Collinare",breve:"Colline e bassi versanti",quota:"indicativamente fino a 800–1000 m, secondo latitudine ed esposizione",
+  testo:"Querceti caducifogli (roverella, cerro), boschi di carpino nero e orniello, castagneti spesso di origine colturale. È la fascia più modellata dall'agricoltura storica."},
+ {id:"montana",nome:"Montana",breve:"Faggete e boschi di conifere",quota:"indicativamente da 800–1000 a 1800–2000 m",
+  testo:"Sugli Appennini domina il faggio, talvolta con l'abete bianco; sulle Alpi compaiono anche abete rosso e larice. Clima fresco, precipitazioni abbondanti, innevamento invernale."},
+ {id:"alpina",nome:"Subalpina e alpina",breve:"Oltre il limite del bosco",quota:"indicativamente oltre 1800–2200 m",
+  testo:"Dal limite superiore degli alberi alle vette: arbusteti contorti di rododendri, ginepri e pino mugo, poi praterie, rupi, ghiaioni e vallette nivali. Stagione vegetativa di pochi mesi."}
+];
+
+const PERCORSI = [
+ {id:"alpi",nome:"Alpi",testo:"Dai boschi montani alle praterie d'alta quota: un arco di oltre mille chilometri con gradienti climatici e geologici molto marcati, dai massicci cristallini alle Dolomiti calcaree."},
+ {id:"appennini",nome:"Appennini",testo:"La dorsale della penisola, dalle faggete dell'Appennino settentrionale ai massicci calcarei del Centro fino al Pollino e all'Aspromonte, con specie relitte e popolazioni isolate."},
+ {id:"padana",nome:"Pianura Padana",testo:"La pianura più estesa d'Italia. Dei boschi planiziali originari restano pochi lembi; molte specie alloctone hanno trovato qui ambienti favorevoli."},
+ {id:"coste",nome:"Coste",testo:"Dune, scogliere, macchie e leccete costiere: ambienti fragili, esposti al vento salmastro e alla pressione urbanistica."},
+ {id:"sardegna",nome:"Sardegna",testo:"Un'isola antica e isolata, con un'alta percentuale di endemismi, vasti territori di macchia e montagne silicee e calcaree."},
+ {id:"sicilia",nome:"Sicilia",testo:"Dalle coste africane alle faggete dell'Etna e delle Madonie: l'isola ospita endemismi rarissimi e la più grande variabilità di ambienti del Mediterraneo centrale."}
+];
+
+const HABITAT = {
+ boschi:"Boschi", macchia:"Macchia e garighe", rupi:"Rupi e pietraie", praterie:"Praterie e pascoli",
+ coste:"Ambienti costieri", arbusteti:"Arbusteti d'altitudine", antropici:"Margini, scarpate e incolti"
+};
+
+const STATUS = {
+ autoctona:{label:"Autoctona",def:"Specie nativa del territorio italiano."},
+ endemica:{label:"Endemica",def:"Autoctona con areale limitato a un territorio circoscritto."},
+ naturalizzata:{label:"Naturalizzata",def:"Alloctona che si riproduce stabilmente in natura senza intervento umano."},
+ invasiva:{label:"Alloctona invasiva",def:"Alloctona naturalizzata che si diffonde rapidamente e altera gli ecosistemi."}
+};
+
+const FONTI = {
+ pignatti:"Pignatti S., Guarino R., La Rosa M. (2017–2019). Flora d'Italia, 2ª ed., 4 voll. Edagricole, Bologna.",
+ bartolucci:"Bartolucci F. et al. (2018). An updated checklist of the vascular flora native to Italy. Plant Biosystems 152(2): 179–303; e aggiornamenti successivi.",
+ galasso:"Galasso G. et al. (2018). An updated checklist of the vascular flora alien to Italy. Plant Biosystems 152(3): 556–592; e aggiornamenti successivi.",
+ portale:"Portale della Flora d'Italia (Portal to the Flora of Italy), dryades.units.it/floritaly — consultazione per la distribuzione regionale.",
+ iucn:"IUCN Red List of Threatened Species, iucnredlist.org — valutazione globale della specie.",
+ habitat:"Direttiva 92/43/CEE del Consiglio (Direttiva Habitat), Allegato II.",
+ piovesan:"Piovesan G. et al. (2018). The oldest dated tree of Europe lives in the wild Pollino massif: Italus, a strip-bark Heldreich's pine. Ecology 99(7): 1682–1684.",
+ unesco:"UNESCO World Heritage Centre. Antiche faggete primordiali dei Carpazi e di altre regioni d'Europa (estensione 2017, siti italiani)."
+};
+
+/* plate: parametri dell'illustrazione — media: illustrazioni di servizio finché non arrivano fotografie con fonte verificata */
+const SPECIE = [
+ {id:"quercus-ilex",comune:"Leccio",altri:["Elce"],sci:"Quercus ilex",autore:"L.",famiglia:"Fagaceae",status:"autoctona",
+  portamento:"Albero o arbusto sempreverde",
+  fasce:["mediterranea","collinare"],percorsi:["coste","appennini","sardegna","sicilia"],habitat:["boschi","macchia","rupi"],
+  regioni:["lig","lom","taa","ven","fvg","emr","tos","umb","mar","laz","abr","mol","cam","pug","bas","cal","sic","sar"],
+  distribuzione:"Diffuso lungo le coste, nelle isole e nell'entroterra peninsulare a clima mite. Nel Nord è presente con popolamenti extrazonali in ambienti favorevoli, come le sponde dei laghi prealpini.",
+  quota:"Dal livello del mare alla bassa montagna, con limiti più elevati nel Mezzogiorno.",
+  fioritura:[4,5],fiorNota:"Fiori unisessuali poco vistosi: amenti maschili penduli, fiori femminili isolati.",
+  descr:"Quercia sempreverde simbolo della vegetazione mediterranea. Forma boschi chiusi e ombrosi, le leccete, e partecipa alla macchia. Nelle stazioni più aride e rupestri vive in forma di arbusto.",
+  keys:["Foglie persistenti e coriacee, verde scuro e lucide sopra, grigio-tomentose sotto.","Forma e margine delle foglie variano anche sulla stessa pianta: intere sui rami adulti, spesso dentato-spinose sui polloni e sui getti giovani.","Ghianda allungata, in una cupola con squame appressate.","Corteccia grigio scura, finemente screpolata in piccole placche."],
+  cons:null,fonti:["bartolucci","pignatti","portale"],
+  plate:{type:"branch",leaf:"ovate",L:46,W:16,n:9,flower:"amento",fruit:"acorn",habit:"tree-round"}},
+
+ {id:"myrtus-communis",comune:"Mirto",altri:["Mortella"],sci:"Myrtus communis",autore:"L.",famiglia:"Myrtaceae",status:"autoctona",
+  portamento:"Arbusto sempreverde aromatico",
+  fasce:["mediterranea"],percorsi:["coste","sardegna","sicilia"],habitat:["macchia","boschi","coste"],
+  regioni:["lig","tos","laz","cam","bas","cal","pug","sic","sar"],
+  distribuzione:"Specie tipica della macchia mediterranea, diffusa soprattutto lungo le coste tirreniche e ioniche, in Sicilia e in Sardegna.",
+  quota:"Prevalentemente dalla costa alla bassa collina.",
+  fioritura:[6,7],fiorNota:"La fioritura può anticipare o prolungarsi secondo la stagione e la località.",
+  descr:"Arbusto sempreverde e aromatico della macchia mediterranea, legato ai climi miti. In Sardegna le bacche sono usate tradizionalmente per il liquore di mirto.",
+  keys:["Foglie opposte, piccole, lanceolate e coriacee; in controluce mostrano punteggiature traslucide, le ghiandole oleifere.","Le foglie strofinate emettono un profumo resinoso caratteristico.","Fiori bianchi solitari, a cinque petali, con un ciuffo di numerosissimi stami.","Il frutto è una bacca blu-nerastra, più raramente biancastra, che matura in autunno-inverno."],
+  cons:null,fonti:["bartolucci","pignatti","portale"],
+  plate:{type:"branch",leaf:"lanceolate",L:30,W:8,n:14,opp:true,flower:"myrtle",fruit:"berry",habit:"shrub"}},
+
+ {id:"chamaerops-humilis",comune:"Palma nana",altri:["Palma di San Pietro"],sci:"Chamaerops humilis",autore:"L.",famiglia:"Arecaceae",status:"autoctona",
+  portamento:"Palma cespitosa, raramente con fusto evidente",
+  fasce:["mediterranea"],percorsi:["coste","sardegna","sicilia"],habitat:["rupi","macchia","coste"],
+  regioni:["tos","laz","cam","cal","sic","sar"],
+  distribuzione:"Rupi e pendii costieri soleggiati della Sicilia e della Sardegna; sul versante tirrenico peninsulare è localizzata in poche stazioni (ad esempio promontori calcarei).",
+  quota:"Prevalentemente fascia costiera.",
+  fioritura:[4,5],fiorNota:"Pianta generalmente dioica: individui con fiori maschili e individui con fiori femminili.",
+  descr:"È l'unica palma spontanea della flora italiana. Cresce in cespi bassi e densi su rupi, garighe e macchie aride, spesso su substrati calcarei.",
+  keys:["Foglie a ventaglio (palmate), rigide, divise in segmenti lineari.","Picciolo armato di robuste spine.","Fiori gialli, piccoli, in infiorescenze dense e brevi tra le foglie.","Frutti carnosi, da giallastri a bruno-rossastri a maturità."],
+  cons:null,fonti:["bartolucci","pignatti","portale"],
+  plate:{type:"fan",flower:"palmflower",fruit:"drupe",habit:"palm"}},
+
+ {id:"opuntia-ficus-indica",comune:"Fico d'India",altri:[],sci:"Opuntia ficus-indica",autore:"(L.) Mill.",famiglia:"Cactaceae",status:"naturalizzata",
+  origine:"Messico",portamento:"Pianta succulenta arbustiva",
+  fasce:["mediterranea"],percorsi:["coste","sardegna","sicilia"],habitat:["rupi","coste","antropici"],
+  regioni:["lig","tos","laz","cam","pug","bas","cal","sic","sar"],
+  distribuzione:"Coltivata da secoli nel Mediterraneo e naturalizzata soprattutto nel Sud, in Sicilia e in Sardegna, su rupi, muri a secco e incolti soleggiati. Lo status (naturalizzata o invasiva) varia da regione a regione.",
+  quota:"Prevalentemente fascia costiera e collinare a clima caldo.",
+  fioritura:[5,6],fiorNota:"Nelle coltivazioni siciliane una seconda fioritura viene indotta con la pratica della scozzolatura.",
+  descr:"Originaria del Messico, è oggi un elemento caratteristico del paesaggio dell'Italia meridionale, ma non appartiene alla flora autoctona. È una specie alloctona introdotta dall'uomo.",
+  keys:["Fusti formati da segmenti appiattiti e carnosi, i cladodi, comunemente chiamati pale.","Areole con spine e glochidi: minuscole setole uncinate che si staccano facilmente.","Fiori giallo-arancio inseriti sul margine superiore delle pale.","Frutto carnoso e commestibile, rivestito di glochidi."],
+  cons:null,fonti:["galasso","pignatti","portale"],
+  plate:{type:"cladode",flower:"opuntia",fruit:"prickly",habit:"cactus"}},
+
+ {id:"quercus-robur",comune:"Farnia",altri:["Quercia peduncolata"],sci:"Quercus robur",autore:"L.",famiglia:"Fagaceae",status:"autoctona",
+  portamento:"Grande albero caducifoglio",
+  fasce:["planiziale","collinare"],percorsi:["padana"],habitat:["boschi"],
+  regioni:["pie","lom","taa","ven","fvg","lig","emr","tos","umb","mar","laz","abr","mol","cam","pug","bas","cal"],
+  distribuzione:"Diffusa soprattutto nell'Italia settentrionale e centrale, più rara e localizzata al Sud. Nella Pianura Padana sopravvive in pochi boschi residui, come il Bosco Fontana (Mantova) e il Bosco della Mesola (Ferrara).",
+  quota:"Pianure e bassi versanti collinari su suoli profondi e freschi.",
+  fioritura:[4,5],fiorNota:"Fioritura contemporanea all'emissione delle foglie.",
+  descr:"Grande quercia caducifoglia dei suoli profondi e umidi di pianura. Un tempo dominava i boschi della Pianura Padana insieme al carpino bianco.",
+  keys:["Foglie lobate con picciolo brevissimo e base a orecchiette (auricolata).","Ghiande portate su un lungo peduncolo, da cui il nome di quercia peduncolata.","Corteccia grigia, profondamente solcata negli esemplari adulti.","Da non confondere con la rovere (Quercus petraea), che ha foglie con picciolo evidente e ghiande quasi sessili."],
+  cons:null,fonti:["bartolucci","pignatti","portale"],
+  plate:{type:"branch",leaf:"lobed",L:58,W:22,n:7,flower:"amento",fruit:"acorn-long",habit:"tree-round"}},
+
+ {id:"robinia-pseudoacacia",comune:"Robinia",altri:["Gaggia","Acacia (nome improprio)"],sci:"Robinia pseudoacacia",autore:"L.",famiglia:"Fabaceae",status:"invasiva",
+  origine:"Nord America orientale",portamento:"Albero caducifoglio spinoso",
+  fasce:["planiziale","collinare"],percorsi:["padana"],habitat:["antropici","boschi"],
+  regioni:ALL_REG.slice(),
+  distribuzione:"Segnalata in tutte le regioni. Molto diffusa lungo scarpate, argini, margini di boschi e ferrovie, soprattutto nell'Italia settentrionale.",
+  quota:"Dalla pianura alla bassa montagna.",
+  fioritura:[4,5,6],fiorNota:"Fiori molto visitati dalle api: è una fonte importante di miele (miele di acacia).",
+  descr:"Albero originario del Nord America orientale, introdotto in Europa all'inizio del Seicento come pianta ornamentale e poi usato per consolidare scarpate e produrre legname. In Italia è naturalizzata e invasiva: forma popolamenti densi che sostituiscono la vegetazione autoctona.",
+  keys:["Foglie composte imparipennate, con foglioline ovali a margine intero.","Alla base delle foglie, coppie di spine derivate dalle stipole.","Fiori bianchi, profumati, papilionacei, in grappoli penduli.","Frutto: legume appiattito, bruno, che resta sulla pianta in inverno.","Come molte leguminose arricchisce il suolo di azoto, favorendo le specie nitrofile."],
+  cons:null,fonti:["galasso","pignatti","portale"],
+  plate:{type:"branch",leaf:"pinnate",L:70,W:10,n:6,flower:"raceme",fruit:"legume",habit:"tree-oval"}},
+
+ {id:"fagus-sylvatica",comune:"Faggio",altri:[],sci:"Fagus sylvatica",autore:"L.",famiglia:"Fagaceae",status:"autoctona",
+  portamento:"Grande albero caducifoglio",
+  fasce:["montana"],percorsi:["alpi","appennini","sicilia"],habitat:["boschi"],
+  regioni:ALL_REG.filter(r=>r!=="sar"),
+  distribuzione:"Lungo tutto l'arco alpino e la dorsale appenninica fino alla Sicilia (Madonie, Nebrodi, Etna). Non è spontaneo in Sardegna. Sul Gargano scende a quote insolitamente basse (Foresta Umbra).",
+  quota:"Fascia montana; sulle Alpi spesso più in basso che sugli Appennini.",
+  fioritura:[4,5],fiorNota:"Fiori poco vistosi, contemporanei all'apertura delle foglie.",
+  descr:"Albero dominante della fascia montana appenninica e di parte di quella alpina. Le faggete, ombrose e con poco sottobosco, sono tra i boschi più estesi d'Italia. Alcune faggete italiane, tra cui Sasso Fratino e la Foresta Umbra, fanno parte del sito UNESCO delle antiche faggete primordiali d'Europa.",
+  keys:["Corteccia liscia, grigio-argentea, anche negli alberi vecchi.","Foglie ovali a margine intero o leggermente ondulato, cigliate da giovani.","Gemme lunghe, sottili e appuntite.","Frutto: faggiola, un achenio trigono racchiuso a coppie in una cupola legnosa con aculei morbidi."],
+  cons:null,fonti:["bartolucci","pignatti","portale","unesco"],
+  plate:{type:"branch",leaf:"ovate",L:44,W:20,n:8,flower:"amento",fruit:"beechnut",habit:"tree-oval"}},
+
+ {id:"pinus-heldreichii",comune:"Pino loricato",altri:[],sci:"Pinus heldreichii",autore:"H.Christ",sin:"Pinus leucodermis Antoine",famiglia:"Pinaceae",status:"autoctona",gimno:true,
+  portamento:"Albero sempreverde, spesso contorto",
+  fasce:["montana","alpina"],percorsi:["appennini"],habitat:["rupi","boschi"],
+  regioni:["bas","cal"],
+  distribuzione:"In Italia cresce soltanto sul massiccio del Pollino e sui Monti di Orsomarso, tra Basilicata e Calabria. L'areale comprende anche la Penisola balcanica: non è quindi un endemismo italiano.",
+  quota:"Fascia montana superiore e subalpina, su creste e rupi calcaree.",
+  fioritura:null,fiorNota:"Gimnosperma: non produce fiori ma strobili (coni).",
+  descr:"Pino dalle forme scolpite dal vento, simbolo del Parco Nazionale del Pollino. Il nome richiama la corteccia degli adulti, divisa in placche simili alla lorica, l'armatura dei legionari romani. Un esemplare del Pollino, chiamato Italus, è stato datato a oltre 1.200 anni.",
+  keys:["Aghi riuniti a coppie, rigidi, verde scuro, addensati verso l'apice dei rametti.","Corteccia degli adulti divisa in placche poligonali grigie.","Coni ovoidi che maturano nel secondo anno.","Portamento spesso contorto o a bandiera nelle stazioni esposte."],
+  cons:{iucn:"Least Concern (valutazione globale)",nota:"Le popolazioni italiane ricadono nel Parco Nazionale del Pollino."},
+  fonti:["bartolucci","pignatti","portale","iucn","piovesan"],
+  plate:{type:"needle",fruit:"cone",habit:"conifer-wind"}},
+
+ {id:"abies-nebrodensis",comune:"Abete dei Nebrodi",altri:[],sci:"Abies nebrodensis",autore:"(Lojac.) Mattei",famiglia:"Pinaceae",status:"endemica",gimno:true,
+  portamento:"Albero sempreverde",
+  fasce:["montana"],percorsi:["sicilia"],habitat:["boschi","rupi"],
+  regioni:["sic"],
+  distribuzione:"Endemica della Sicilia. La popolazione naturale sopravvive con circa trenta alberi adulti nel Vallone Madonna degli Angeli, sulle Madonie (Parco delle Madonie). Nonostante il nome, non si trova sui Nebrodi.",
+  quota:"Versanti in quota delle Madonie.",
+  fioritura:null,fiorNota:"Gimnosperma: non produce fiori ma strobili (coni).",
+  descr:"Una delle conifere più rare d'Europa. Sopravvissuta come popolazione relitta, è oggetto di programmi di conservazione e di rinforzo della popolazione con piantine di origine locale.",
+  keys:["Aghi appiattiti, corti e rigidi, con due bande biancastre sulla pagina inferiore.","Rami disposti in palchi regolari.","Coni eretti e cilindrici, che a maturità si disfano sulla pianta, come in tutti gli abeti."],
+  cons:{iucn:"Critically Endangered (CR)",legge:"Specie prioritaria della Direttiva Habitat 92/43/CEE (Allegato II)",nota:"Popolazione naturale ridotta a poche decine di individui adulti."},
+  fonti:["bartolucci","pignatti","iucn","habitat"],
+  plate:{type:"needle",fir:true,fruit:"cone-up",habit:"conifer"}},
+
+ {id:"rhododendron-ferrugineum",comune:"Rododendro rosso",altri:["Rododendro ferrugineo"],sci:"Rhododendron ferrugineum",autore:"L.",famiglia:"Ericaceae",status:"autoctona",
+  portamento:"Arbusto sempreverde",
+  fasce:["alpina"],percorsi:["alpi"],habitat:["arbusteti"],
+  regioni:["pie","vda","lom","taa","ven","fvg"],
+  distribuzione:"Diffuso sull'arco alpino, dove forma estese brughiere subalpine. Eventuali stazioni appenniniche vanno verificate sulle fonti regionali.",
+  quota:"Fascia subalpina, al limite superiore del bosco e appena oltre.",
+  fioritura:[6,7,8],fiorNota:"Alle quote più elevate la fioritura si sposta verso l'estate piena.",
+  descr:"Arbusto sempreverde che forma estesi tappeti nella fascia subalpina, spesso insieme a mirtilli, larici e pino cembro. Predilige suoli acidi e una buona copertura nevosa invernale.",
+  keys:["Foglie coriacee, ellittiche, a margine revoluto; la pagina inferiore diventa bruno-ruggine per fitte squamette.","Fiori rosso-rosati, imbutiformi, riuniti all'apice dei rami.","Si distingue dal rododendro irsuto (R. hirsutum) dei suoli calcarei, che ha foglie cigliate e verdi sotto."],
+  cons:null,fonti:["bartolucci","pignatti","portale"],
+  plate:{type:"branch",leaf:"lanceolate",L:34,W:10,n:12,flower:"rhodo",fruit:null,habit:"shrub-low"}},
+
+ {id:"leontopodium-nivale-alpinum",comune:"Stella alpina",altri:[],sci:"Leontopodium nivale subsp. alpinum",autore:"(Cass.) Greuter",sin:"Leontopodium alpinum Cass.",famiglia:"Asteraceae",status:"autoctona",
+  portamento:"Erbacea perenne",
+  fasce:["alpina"],percorsi:["alpi"],habitat:["rupi","praterie"],
+  regioni:["pie","vda","lom","taa","ven","fvg"],
+  distribuzione:"Arco alpino, soprattutto su substrati calcarei. Sull'Appennino centrale è presente un'entità affine, Leontopodium nivale subsp. nivale, trattata in una scheda separata.",
+  quota:"Fascia alpina, su rupi, cenge e praterie sassose.",
+  fioritura:[7,8,9],fiorNota:"",
+  descr:"La pianta più celebre delle Alpi, simbolo dell'alpinismo. Cresce oltre il limite del bosco, su rupi e praterie aride e sassose.",
+  keys:["Intera pianta ricoperta da una fitta peluria bianco-lanosa.","Quello che sembra un unico fiore è un'infiorescenza: piccoli capolini giallastri circondati da una stella di brattee feltrose.","Foglie basali lineari-lanceolate, grigio-tomentose."],
+  cons:{legge:"Protetta dalla normativa di diverse regioni alpine: la raccolta è vietata o limitata",nota:"Verificare la legge regionale vigente nel luogo di osservazione."},
+  fonti:["bartolucci","pignatti","portale"],
+  plate:{type:"rosette",flower:"edelweiss",fruit:null,habit:"herb"}}
+];
+
+const GUIDE = [
+ {id:"farnia-rovere",titolo:"Farnia o rovere?",sotto:"Due querce simili, due ambienti diversi",
+  corpo:[
+   "La farnia (Quercus robur) e la rovere (Quercus petraea) si confondono facilmente, e in natura formano anche ibridi. Per riconoscerle bastano due caratteri, da osservare insieme.",
+   "Il picciolo della foglia: nella farnia è brevissimo e la lamina si allarga alla base in due piccole orecchiette; nella rovere il picciolo è evidente e la base della foglia è a cuneo.",
+   "Il peduncolo delle ghiande: nella farnia le ghiande pendono da un lungo peduncolo; nella rovere sono quasi sessili, attaccate direttamente al rametto.",
+   "Anche l'ambiente aiuta: la farnia predilige i suoli profondi e umidi delle pianure, la rovere i versanti collinari e montani meglio drenati."],
+  specie:["quercus-robur","quercus-ilex"]},
+ {id:"status",titolo:"Autoctona, endemica, naturalizzata",sotto:"Le parole per dire da dove viene una pianta",
+  corpo:[
+   "Autoctona (o nativa) è una specie che si è originata in un territorio o vi è arrivata senza l'intervento umano. Endemica è una specie autoctona il cui areale è limitato a un territorio circoscritto, come l'abete dei Nebrodi in Sicilia.",
+   "Alloctona (o esotica) è una specie portata dall'uomo, volontariamente o per caso. Per convenzione si distinguono le archeofite, introdotte prima del 1492, e le neofite, introdotte dopo.",
+   "Un'alloctona è casuale se compare in natura senza mantenersi, naturalizzata se forma popolazioni stabili, invasiva se si diffonde rapidamente e altera gli ecosistemi. La robinia è un esempio di alloctona invasiva.",
+   "Queste categorie seguono la terminologia di Richardson et al. (2000) e Pyšek et al. (2004), adottata dalle checklist nazionali."],
+  specie:["robinia-pseudoacacia","opuntia-ficus-indica","abies-nebrodensis"]},
+ {id:"fasce",titolo:"Leggere le fasce altitudinali",sotto:"Perché la vegetazione cambia salendo di quota",
+  corpo:[
+   "Salendo di quota la temperatura media diminuisce e la stagione vegetativa si accorcia. La vegetazione si dispone così in fasce, ognuna con specie dominanti caratteristiche.",
+   "I limiti tra le fasce non sono fissi: si alzano verso sud e sui versanti esposti al sole, si abbassano verso nord, sui versanti in ombra e nelle valli fredde.",
+   "Per questo le quote indicate nelle schede sono sempre indicative. Il faggio, ad esempio, scende a quote insolitamente basse sul Gargano e sale molto in alto sull'Etna."],
+  specie:["fagus-sylvatica","rhododendron-ferrugineum"]}
+];
+
+/* ============ ILLUSTRAZIONI ============ */
+const P = (n)=>Math.round(n*10)/10;
+function leafPath(shape,L,W){
+  if(shape==="ovate") return `M0 0 C${W} ${-L*.15} ${W*.95} ${-L*.75} 0 ${-L} C${-W*.95} ${-L*.75} ${-W} ${-L*.15} 0 0Z`;
+  if(shape==="lanceolate") return `M0 0 C${W} ${-L*.25} ${W*.7} ${-L*.8} 0 ${-L} C${-W*.7} ${-L*.8} ${-W} ${-L*.25} 0 0Z`;
+  if(shape==="lobed"){
+    const N=48,R=[],Lf=[];
+    for(let i=0;i<=N;i++){const t=i/N;const env=W*Math.pow(Math.sin(Math.PI*Math.min(1,t*1.05)),.7)*(0.55+0.45*t);
+      const lobe=.58+.42*Math.abs(Math.cos(t*Math.PI*4.5));const x=P(env*lobe);R.push(`${x} ${P(-L*t)}`);Lf.unshift(`${-x} ${P(-L*t)}`);}
+    return "M0 0 L"+R.join(" L")+" L"+Lf.join(" L")+"Z";
+  }
+  return "";
+}
+function leafG(shape,L,W,x,y,a,cls="lf"){
+  if(shape==="pinnate"){
+    let s=`<g transform="translate(${P(x)} ${P(y)}) rotate(${P(a)})"><path class="stem" stroke-width="1" d="M0 0 L0 ${-L}"/>`;
+    const n=5;for(let i=0;i<n;i++){const yy=-L*(.22+i*.16);
+      s+=`<path class="${cls}" transform="translate(0 ${P(yy)}) rotate(70)" d="${leafPath("ovate",W*1.3,W*.5)}"/><path class="${cls}" transform="translate(0 ${P(yy)}) rotate(-70)" d="${leafPath("ovate",W*1.3,W*.5)}"/>`;}
+    s+=`<path class="${cls}" transform="translate(0 ${-L})" d="${leafPath("ovate",W*1.3,W*.5)}"/>`;
+    return s+"</g>";
+  }
+  return `<g transform="translate(${P(x)} ${P(y)}) rotate(${P(a)})"><path class="${cls}" d="${leafPath(shape,L,W)}"/><path class="vein" d="M0 0 L0 ${P(-L*.93)}"/></g>`;
+}
+function glyph(kind,x,y,s=1){
+  const g=(c)=>`<g transform="translate(${P(x)} ${P(y)}) scale(${s})">${c}</g>`;
+  switch(kind){
+   case "amento": {let c=`<path class="stem" stroke-width="1" d="M0 0 C3 10 -3 22 1 34"/>`;for(let i=0;i<8;i++)c+=`<circle class="yel" cx="${P(Math.sin(i)*1.5)}" cy="${6+i*3.6}" r="2.2"/>`;return g(c);}
+   case "myrtle": {let c="";for(let i=0;i<5;i++)c+=`<ellipse class="petal" rx="5" ry="8" transform="rotate(${i*72}) translate(0 -7)"/>`;for(let i=0;i<24;i++){const a=i*15*Math.PI/180;c+=`<line class="vein" style="stroke:var(--giallo);opacity:1" x1="0" y1="0" x2="${P(Math.cos(a)*10)}" y2="${P(Math.sin(a)*10)}"/>`;}return g(c+`<circle class="yel" r="2"/>`);}
+   case "raceme": {let c=`<path class="stem" stroke-width="1" d="M0 0 C4 15 2 35 6 52"/>`;for(let i=0;i<9;i++){const yy=6+i*5.2,xx=P(Math.sin(i*.6)*3+i*.5);c+=`<path class="petal" d="M${xx-5} ${yy} q5 -6 10 0 q-5 6 -10 0Z"/>`;}return g(c);}
+   case "rhodo": {let c="";for(let i=0;i<6;i++){c+=`<g transform="rotate(${-75+i*30}) translate(0 -6)"><path class="pink" d="M0 0 L-5 -14 Q0 -18 5 -14Z"/></g>`;}return g(c);}
+   case "opuntia": return g(`<path class="yel" d="M-9 0 Q-12 -14 -4 -16 Q0 -20 4 -16 Q12 -14 9 0Z"/><path class="vein" d="M-4 -2 L-3 -13 M0 -2 L0 -15 M4 -2 L3 -13"/>`);
+   case "palmflower": {let c=`<path class="stem" stroke-width="1.4" d="M0 0 L0 -14"/>`;for(let i=0;i<14;i++)c+=`<circle class="yel" cx="${P(Math.cos(i*2.4)*6)}" cy="${P(-16-Math.sin(i*2.4)*5-i*.3)}" r="2.3"/>`;return g(c);}
+   case "edelweiss": {let c="";for(let i=0;i<9;i++)c+=`<ellipse class="wool" rx="4" ry="11" transform="rotate(${i*40}) translate(0 -11)"/>`;for(let i=0;i<6;i++)c+=`<circle class="yel" cx="${P(Math.cos(i)*4)}" cy="${P(Math.sin(i)*4)}" r="2.6" style="fill:var(--leaf-2)"/>`;return g(c+`<circle class="wool" r="3"/>`);}
+   case "acorn": return g(`<path class="stem" stroke-width="1" d="M0 0 L0 4"/><ellipse class="brown" cx="0" cy="17" rx="6" ry="11"/><path class="lf2" d="M-7 10 Q0 2 7 10 L6 14 Q0 11 -6 14Z"/>`);
+   case "acorn-long": return g(`<path class="stem" stroke-width="1.1" d="M0 0 C2 10 -1 20 0 28"/><ellipse class="brown" cx="0" cy="40" rx="6.5" ry="10"/><path class="lf2" d="M-7.5 34 Q0 26 7.5 34 L6.5 37 Q0 34 -6.5 37Z"/>`);
+   case "berry": return g(`<path class="stem" stroke-width="1" d="M0 0 L0 6"/><circle class="berry" cx="0" cy="13" r="7"/><path class="vein" d="M-2 6 l2 2 l2 -2"/>`);
+   case "beechnut": {let c=`<path class="stem" stroke-width="1" d="M0 0 L0 6"/><path class="brown" d="M-9 8 Q0 34 9 8 Q0 2 -9 8Z"/>`;for(let i=0;i<10;i++)c+=`<line class="vein" style="stroke:var(--bruno);opacity:1" x1="${-7+i*1.5}" y1="${12+(i%3)*4}" x2="${-9+i*1.6}" y2="${14+(i%3)*4}"/>`;return g(c);}
+   case "legume": return g(`<path class="stem" stroke-width="1" d="M0 0 L0 6"/><path class="brown" d="M0 6 C6 20 4 50 -2 66 C-8 50 -6 20 0 6Z"/><path class="vein" d="M0 10 L-1 62"/>`);
+   case "prickly": {let c=`<ellipse class="terra" cx="0" cy="-10" rx="8" ry="11"/>`;for(let i=0;i<9;i++)c+=`<circle class="yel" cx="${P(Math.cos(i*2.2)*5)}" cy="${P(-10+Math.sin(i*2.2)*7)}" r=".9"/>`;return g(c);}
+   case "drupe": {let c="";for(let i=0;i<5;i++)c+=`<ellipse class="terra" cx="${(i-2)*7}" cy="${P(8+Math.abs(i-2)*3)}" rx="4" ry="5.5"/>`;return g(c);}
+   case "cone": {let c=`<ellipse class="brown" cx="0" cy="0" rx="12" ry="18"/>`;for(let i=-3;i<=3;i++)c+=`<path class="vein" style="stroke:var(--avorio);opacity:.7" d="M-11 ${i*5} Q0 ${i*5+5} 11 ${i*5}"/>`;return g(c);}
+   case "cone-up": {let c=`<rect class="brown" x="-8" y="-34" width="16" height="34" rx="8"/>`;for(let i=0;i<6;i++)c+=`<path class="vein" style="stroke:var(--avorio);opacity:.7" d="M-8 ${-6-i*5} Q0 ${-2-i*5} 8 ${-6-i*5}"/>`;return g(c);}
+  }
+  return "";
+}
+function habitSVG(kind){
+  const gr=`<path class="ground" d="M10 186 L190 186"/>`;
+  let c="";
+  switch(kind){
+   case "tree-round": c=`<path class="stem" stroke-width="7" d="M100 186 L100 120 M100 135 L80 112 M100 128 L122 108"/><path class="lf" d="M40 110 C30 60 70 30 100 34 C135 30 170 60 160 108 C150 132 120 128 100 124 C80 130 48 134 40 110Z"/>`;break;
+   case "tree-oval": c=`<path class="stem" stroke-width="7" d="M100 186 L100 110"/><path class="lf" d="M58 120 C40 70 70 20 100 18 C132 20 160 70 142 120 C130 140 70 140 58 120Z"/>`;break;
+   case "conifer": c=`<path class="stem" stroke-width="6" d="M100 186 L100 150"/>`;for(let i=0;i<6;i++){const y=40+i*20,w=16+i*12;c+=`<path class="lf" d="M100 ${y-26} L${100+w} ${y+16} L${100-w} ${y+16}Z"/>`;}break;
+   case "conifer-wind": c=`<path class="stem" stroke-width="7" d="M96 186 C96 150 92 120 104 92 C112 74 106 56 112 40"/><path class="lf" d="M100 100 C120 92 160 96 172 108 C150 114 120 112 100 106Z"/><path class="lf" d="M106 72 C126 64 158 66 166 76 C146 82 120 80 106 78Z"/><path class="lf" d="M108 48 C122 38 146 40 152 48 C138 54 120 54 108 52Z"/><path class="lf" d="M94 132 C78 128 56 134 48 142 C66 146 84 142 94 138Z"/>`;break;
+   case "shrub": c=`<path class="lf" d="M36 186 C24 150 50 110 80 116 C92 92 128 92 136 116 C166 112 182 152 166 186Z"/><path class="stem" stroke-width="2" d="M100 186 L96 150 M100 186 L116 156 M100 186 L78 160"/>`;break;
+   case "shrub-low": c=`<path class="lf" d="M20 186 C16 160 40 146 64 152 C76 136 120 134 134 150 C162 144 186 162 180 186Z"/>`;for(let i=0;i<7;i++)c+=`<circle class="pink" cx="${40+i*20}" cy="${152-(i%2)*8}" r="5"/>`;break;
+   case "palm": for(let i=0;i<7;i++){const a=-70+i*23,r=Math.PI*a/180,x=P(100+Math.sin(r)*72),y=P(176-Math.cos(r)*80);c+=`<path class="stem" stroke-width="1.6" d="M100 184 L${x} ${y}"/><g transform="translate(${x} ${y}) rotate(${a})">`;for(let k=-4;k<=4;k++)c+=`<path class="lf" d="M0 0 L${k*5} -22 L${k*5+2} -22Z" stroke-width="1.5" style="stroke:var(--leaf)"/>`;c+=`</g>`;}break;
+   case "cactus": c=`<ellipse class="lf" cx="100" cy="160" rx="22" ry="28"/><ellipse class="lf" cx="80" cy="118" rx="18" ry="24" transform="rotate(-20 80 118)"/><ellipse class="lf" cx="124" cy="112" rx="18" ry="25" transform="rotate(18 124 112)"/><ellipse class="lf" cx="132" cy="70" rx="14" ry="20" transform="rotate(10 132 70)"/><ellipse class="lf" cx="70" cy="80" rx="13" ry="18" transform="rotate(-25 70 80)"/>`+glyph("prickly",132,52,.8)+glyph("prickly",64,64,.7);break;
+   case "herb": c=`<path class="ground" d="M30 186 L60 170 L90 178 L130 160 L170 176" style="stroke-dasharray:none"/><path class="stem" stroke-width="1.5" style="stroke:var(--leaf-ink)" d="M100 178 L100 112 M84 178 L80 130"/>`+glyph("edelweiss",100,104,1)+glyph("edelweiss",80,124,.6);break;
+  }
+  return `<svg viewBox="0 0 200 200" role="img" aria-hidden="true">${c}${gr}</svg>`;
+}
+
+function plateSVG(sp,opts={}){
+  const p=sp.plate; let c="";
+  if(p.type==="branch"){
+    const x0=150,y0=392,cx=120,cy=210,x1=165,y1=40;
+    c+=`<path class="stem" stroke-width="3" d="M${x0} ${y0} Q${cx} ${cy} ${x1} ${y1}"/>`;
+    const pt=t=>({x:(1-t)*(1-t)*x0+2*(1-t)*t*cx+t*t*x1,y:(1-t)*(1-t)*y0+2*(1-t)*t*cy+t*t*y1});
+    for(let i=0;i<p.n;i++){
+      const t=.14+i*(.8/p.n);const q=pt(t);const side=p.opp?1:(i%2?1:-1);
+      const ang=side*(40+10*Math.sin(i))-6;
+      const scale=.75+.35*Math.sin(Math.PI*t);
+      c+=leafG(p.leaf,p.L*scale,p.W*scale,q.x,q.y,ang,i%3===2?"lf2":"lf");
+      if(p.opp) c+=leafG(p.leaf,p.L*scale,p.W*scale,q.x,q.y,-ang-12,"lf");
+    }
+    const top=pt(.96);
+    if(p.flower==="amento"){c+=glyph("amento",pt(.55).x+4,pt(.55).y,1)+glyph("amento",pt(.62).x+2,pt(.62).y,1);}
+    else if(p.flower==="raceme"){c+=glyph("raceme",pt(.45).x,pt(.45).y,1.2)+glyph("raceme",pt(.75).x,pt(.75).y,1);}
+    else if(p.flower) c+=glyph(p.flower,top.x,top.y,p.flower==="rhodo"?1.4:1.1);
+    if(p.fruit==="acorn") c+=glyph("acorn",pt(.3).x-6,pt(.3).y,1.1)+glyph("acorn",pt(.3).x+8,pt(.3).y+2,1);
+    else if(p.fruit==="acorn-long") c+=glyph("acorn-long",pt(.3).x,pt(.3).y,1);
+    else if(p.fruit==="berry") c+=glyph("berry",pt(.35).x,pt(.35).y,1)+glyph("berry",pt(.5).x,pt(.5).y,.9);
+    else if(p.fruit==="beechnut") c+=glyph("beechnut",pt(.35).x,pt(.35).y,1.1);
+    else if(p.fruit==="legume") c+=glyph("legume",pt(.25).x,pt(.25).y,1);
+  } else if(p.type==="needle"){
+    c+=`<path class="stem" stroke-width="4" d="M60 392 C110 300 150 220 200 60"/><path class="stem" stroke-width="2.5" d="M128 250 C90 210 70 180 60 140 M168 160 C200 140 230 130 250 120"/>`;
+    const pts=[[96,320],[118,270],[140,220],[160,170],[178,120],[194,80],[96,215],[74,175],[62,148],[196,148],[224,132],[246,121]];
+    pts.forEach(([x,y],k)=>{const n=p.fir?14:18;for(let i=0;i<n;i++){const a=(i/n)*Math.PI*2+k;const len=p.fir?14:30;c+=`<line class="needle" x1="${x}" y1="${y}" x2="${P(x+Math.cos(a)*len*(p.fir?1:.9))}" y2="${P(y+Math.sin(a)*len*(p.fir?.6:1)-(p.fir?0:6))}"/>`;}});
+    c+= p.fruit==="cone-up"? glyph("cone-up",150,214,1.3)+glyph("cone-up",184,126,1.1) : glyph("cone",112,300,1.3)+glyph("cone",220,150,1);
+  } else if(p.type==="fan"){
+    for(let i=0;i<5;i++){const a=-55+i*27,r=Math.PI*a/180,x=P(150+Math.sin(r)*170),y=P(380-Math.cos(r)*230);
+      c+=`<path class="stem" stroke-width="2.2" d="M150 384 L${x} ${y}"/>`;
+      for(let s=0;s<6;s++)c+=`<line class="needle" style="stroke:var(--bruno);stroke-width:1" x1="${P(150+(x-150)*(.15+s*.1))}" y1="${P(384+(y-384)*(.15+s*.1))}" x2="${P(150+(x-150)*(.15+s*.1)+5)}" y2="${P(384+(y-384)*(.15+s*.1)-3)}"/>`;
+      c+=`<g transform="translate(${x} ${y}) rotate(${a})">`;for(let k=-6;k<=6;k++)c+=`<path class="${k%2?"lf":"lf2"}" d="M0 0 L${k*7} -70 L${k*7+3} -70Z" style="stroke-width:1.3"/>`;c+="</g>";}
+    c+=glyph("palmflower",134,372,1.6)+glyph("drupe",178,368,1.1);
+  } else if(p.type==="cladode"){
+    const pads=[[150,330,40,58,0],[110,236,34,48,-18],[190,230,34,50,16],[86,150,28,40,-28],[208,146,28,42,22],[150,160,26,38,4]];
+    pads.forEach(([x,y,rx,ry,a],k)=>{c+=`<ellipse class="${k%2?"lf2":"lf"}" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" transform="rotate(${a} ${x} ${y})"/>`;
+      for(let i=0;i<9;i++){const xx=P(x+Math.cos(i*2.1+k)*rx*.6),yy=P(y+Math.sin(i*2.1+k)*ry*.6);c+=`<circle class="yel" cx="${xx}" cy="${yy}" r="1.3"/><path class="vein" d="M${xx} ${yy} l3 -3 M${xx} ${yy} l-3 -2"/>`;}});
+    c+=glyph("opuntia",200,100,1.4)+glyph("opuntia",72,112,1.2)+glyph("prickly",150,124,1.2)+glyph("prickly",226,104,1)+glyph("prickly",96,112,1);
+  } else if(p.type==="rosette"){
+    c+=`<path class="stem" stroke-width="2.4" style="stroke:var(--leaf-ink)" d="M150 380 C150 300 146 220 150 130"/>`;
+    for(let i=0;i<7;i++){const a=-75+i*25;c+=leafG("lanceolate",70+(i%2)*10,9,150,382,a,"lf2");}
+    c+=leafG("lanceolate",40,6,150,280,-35,"lf2")+leafG("lanceolate",40,6,150,230,32,"lf2");
+    c+=glyph("edelweiss",150,118,2.4);
+  }
+  const label = opts.label? `<g font-family="IBM Plex Mono, monospace" font-size="9" fill="currentColor"></g>`:"";
+  return `<svg viewBox="0 0 300 400" role="img" aria-label="Tavola illustrata di ${sp.comune}, ${sp.sci}">${c}${label}</svg>`;
+}
+function partSVG(sp,part){
+  const p=sp.plate;let c="";
+  if(part==="foglie"){
+    if(p.type==="branch") c=leafG(p.leaf,p.leaf==="pinnate"?150:130,p.leaf==="pinnate"?22:(p.W*130/p.L),100,180,0,"lf");
+    else if(p.type==="needle"){for(let i=0;i<(p.fir?9:6);i++)c+= p.fir?`<rect class="lf" x="${40+i*14}" y="50" width="7" height="100" rx="3"/><line class="vein" x1="${42+i*14}" y1="56" x2="${42+i*14}" y2="144" style="stroke:var(--petal);opacity:.9"/><line class="vein" x1="${45+i*14}" y1="56" x2="${45+i*14}" y2="144" style="stroke:var(--petal);opacity:.9"/>`:`<path class="needle" style="stroke-width:3" d="M${70+i*12} 180 Q${80+i*10} 100 ${60+i*16} 20"/>`;
+      if(!p.fir)c+=`<path class="brown" d="M64 170 L96 170 L92 188 L68 188Z"/>`;}
+    else if(p.type==="fan"){c=`<path class="stem" stroke-width="3" d="M100 196 L100 120"/>`;for(let k=-7;k<=7;k++)c+=`<path class="${k%2?"lf":"lf2"}" d="M100 120 L${100+k*11} 14 L${104+k*11} 14Z" style="stroke-width:1.5"/>`;}
+    else if(p.type==="cladode"){c=`<ellipse class="lf" cx="100" cy="100" rx="58" ry="82"/>`;for(let i=0;i<16;i++){const x=P(100+Math.cos(i*2.4)*40*(i/16+.2)),y=P(100+Math.sin(i*2.4)*60*(i/16+.2));c+=`<circle class="yel" cx="${x}" cy="${y}" r="2"/><path class="vein" d="M${x} ${y} l6 -5 M${x} ${y} l-6 -3"/>`;}}
+    else if(p.type==="rosette"){for(let i=0;i<5;i++)c+=leafG("lanceolate",130,14,100,190,-40+i*20,"lf2");}
+  } else if(part==="fiori"){
+    if(sp.gimno) return null;
+    const map={amento:["amento",100,40,3.2],myrtle:["myrtle",100,100,5],raceme:["raceme",100,20,2.8],rhodo:["rhodo",100,130,4],opuntia:["opuntia",100,150,5.5],palmflower:["palmflower",100,190,4.5],edelweiss:["edelweiss",100,100,4]};
+    const m=map[p.flower];if(!m)return null;c=glyph(m[0],m[1],m[2],m[3]);
+  } else if(part==="frutti"){
+    if(!p.fruit) return null;
+    const map={acorn:["acorn",100,20,5],"acorn-long":["acorn-long",100,10,3.4],berry:["berry",100,40,6],beechnut:["beechnut",100,30,4.5],legume:["legume",100,10,2.6],prickly:["prickly",100,170,6.5],drupe:["drupe",100,70,4],cone:["cone",100,100,4.5],"cone-up":["cone-up",100,180,4.4]};
+    const m=map[p.fruit];c=glyph(m[0],m[1],m[2],m[3]);
+  } else if(part==="portamento") return habitSVG(p.habit);
+  return `<svg viewBox="0 0 200 200" aria-hidden="true">${c}</svg>`;
+}
+
+/* ============ UTILITÀ ============ */
+const $=s=>document.querySelector(s);
+const byId=id=>SPECIE.find(s=>s.id===id);
+const fascia=id=>FASCE.find(f=>f.id===id);
+const regione=id=>REGIONI.find(r=>r.id===id);
+const fmtDate=d=>new Date(d+"T12:00:00").toLocaleDateString("it-IT",{day:"numeric",month:"long",year:"numeric"});
+function badges(sp){
+  let b=`<span class="badge ${sp.status}">${STATUS[sp.status].label}</span>`;
+  if(sp.cons&&sp.cons.iucn&&/Endangered|Vulnerable|Critically/.test(sp.cons.iucn)) b+=`<span class="badge cons">IUCN ${sp.cons.iucn.match(/\((\w+)\)/)?.[1]||""}</span>`;
+  else if(sp.cons&&sp.cons.legge) b+=`<span class="badge cons">Protetta</span>`;
+  return b;
+}
+function card(sp){
+  return `<a class="card" href="#specie-${sp.id}"><div class="plate">${plateSVG(sp)}</div>
+  <div class="body"><span class="label">${sp.famiglia}</span><h3>${sp.comune}</h3><p class="sci">${sp.sci} <span class="auth">${sp.autore}</span></p>
+  <div class="meta">${badges(sp)}<span class="badge">${sp.fasce.map(f=>fascia(f).nome.split(" ")[0]).join(" · ")}</span></div></div></a>`;
+}
+function tilemap(opts={}){
+  const counts={};SPECIE.forEach(s=>s.regioni.forEach(r=>counts[r]=(counts[r]||0)+1));
+  let h=`<div class="tilemap" role="${opts.mini?"img":"group"}" aria-label="${opts.mini?"Regioni di presenza":"Mappa schematica delle regioni italiane"}">`;
+  REGIONI.forEach(r=>{
+    const style=`grid-column:${r.c};grid-row:${r.r}`;
+    if(opts.mini){const on=opts.on.includes(r.id);h+=`<div class="tile ${on?"on":"off"}" style="${style}" title="${r.nome}${on?": presente":""}"><b>${r.ab}</b></div>`;}
+    else h+=`<button class="tile" style="${style}" data-reg="${r.id}" aria-label="${r.nome}: ${counts[r.id]||0} specie in catalogo"><b>${r.ab}</b><small>${counts[r.id]||0} sp.</small></button>`;
+  });
+  return h+`</div>`;
+}
+function transectSVG(){
+  // profilo schematico costa → vetta, non in scala
+  const bands=[["mediterranea",0,150,"Mediterranea"],["planiziale",150,300,"Planiziale"],["collinare",300,450,"Collinare"],["montana",450,620,"Montana"],["alpina",620,800,"Subalpina e alpina"]];
+  const prof=x=>{if(x<150)return 200-x*.12; if(x<300)return 182-(x-150)*.02; if(x<450)return 179-(x-300)*.28-Math.sin(x/18)*4; if(x<620)return 137-(x-450)*.45-Math.sin(x/14)*5; return 60-(x-620)*.25-Math.abs(Math.sin(x/12))*10;};
+  const tints=["var(--salvia-soft)","var(--leaf-2)","var(--salvia)","var(--leaf)","var(--avorio)"];
+  let s=`<svg viewBox="0 0 800 260" role="group" aria-label="Profilo schematico delle fasce altitudinali, dalla costa alle vette">`;
+  s+=`<rect x="0" y="200" width="800" height="60" fill="var(--carta)"/><path d="M0 206 q20 -4 40 0 t40 0 t40 0" fill="none" stroke="var(--salvia)" stroke-width="1"/>`;
+  bands.forEach(([id,a,b,lab],i)=>{let d=`M${a} 230`;for(let x=a;x<=b;x+=5)d+=` L${x} ${P(prof(x))}`;d+=` L${b} 230Z`;
+    s+=`<a class="band" href="#fascia-${id}" aria-label="Fascia ${lab}"><path d="${d}" fill="${tints[i]}" stroke="var(--leaf-ink)" stroke-width="1"/><text x="${(a+b)/2}" y="250" text-anchor="middle">${lab.toUpperCase()}</text></a>`;});
+  s+=`<g font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)"><text x="6" y="196">0 m</text><text x="690" y="28">vette</text></g>`;
+  // piccoli simboli vegetali
+  const tree=(x,y,cls)=>`<path class="${cls}" d="M${x} ${y} c-7 -2 -8 -14 0 -16 c8 2 7 14 0 16Z"/><line class="stem" x1="${x}" y1="${y}" x2="${x}" y2="${y+5}" stroke-width="1.2"/>`;
+  const fir=(x,y)=>`<path class="lf" d="M${x} ${y-18} L${x+6} ${y} L${x-6} ${y}Z"/>`;
+  [40,70,110].forEach(x=>s+=tree(x,prof(x)-4,"lf"));[190,240,270].forEach(x=>s+=tree(x,prof(x)-4,"lf"));[330,380,420].forEach(x=>s+=tree(x,prof(x)-4,"lf2"));[480,520,560,600].forEach(x=>s+=fir(x,prof(x)-1));
+  [650,700].forEach(x=>s+=`<circle class="pink" cx="${x}" cy="${P(prof(x)-3)}" r="3"/>`);
+  return s+`</svg>`;
+}
+
+/* ============ PAGINE ============ */
+const state={q:"",fascia:"",regione:"",habitat:"",mesi:[],status:[]};
+
+function pageHome(){
+  const hero=byId("quercus-ilex");
+  const featured=["abies-nebrodensis","chamaerops-humilis","pinus-heldreichii","robinia-pseudoacacia"].map(byId);
+  return `
+  <section class="wrap hero">
+    <div class="hero-text">
+      <span class="label">Enciclopedia illustrata della flora spontanea</span>
+      <h1>Le piante d'Italia, <em>dal mare alle vette</em></h1>
+      <p class="lede">Schede botaniche sulle specie spontanee italiane: come riconoscerle, dove crescono, quando fioriscono. Ogni scheda distingue le piante native da quelle introdotte dall'uomo e cita le fonti scientifiche.</p>
+      <form class="search" id="home-search" role="search">
+        <label for="hq" class="label" style="flex-basis:100%">Cerca per nome comune o scientifico</label>
+        <input id="hq" type="search" placeholder="es. leccio, Fagus sylvatica" autocomplete="off">
+        <button class="btn" type="submit">Cerca</button>
+      </form>
+      <div class="chips" aria-label="Ricerche suggerite">${["Faggio","Quercus","Stella alpina","Pinaceae"].map(t=>`<button class="chip" data-q="${t}">${t}</button>`).join("")}</div>
+    </div>
+    <figure class="sheet" style="margin:0">
+      <span class="tape t1"></span><span class="tape t2"></span>
+      ${plateSVG(hero)}
+      <figcaption class="tag"><span class="label" style="font-size:.62rem">Tavola illustrativa · Flora Italiana</span><br><span class="sci">Quercus ilex</span> L.<br>Fam. Fagaceae · Leccio<br>Fascia mediterranea</figcaption>
+    </figure>
+  </section>
+
+  <section class="block" style="background:var(--carta)"><div class="wrap">
+    <div class="sec-head"><div><span class="label">Esplora per quota</span><h2>Le fasce altitudinali</h2><p>Salendo dalla costa alle vette la vegetazione cambia per fasce. Scegli una fascia per vedere le specie che la caratterizzano.</p></div><a class="btn ghost" href="#fasce">Tutte le fasce</a></div>
+    <div class="transect">${transectSVG()}</div>
+    <p class="note" style="margin-top:.8rem">Profilo schematico, non in scala. I limiti tra le fasce variano con latitudine, esposizione e substrato.</p>
+  </div></section>
+
+  <section class="block"><div class="wrap map-grid">
+    <div>
+      <span class="label">Mappa delle regioni</span><h2 style="margin-block:.4rem 1rem">Cosa cresce dove</h2>
+      <p class="muted" style="margin-bottom:1.2rem">Scegli una regione per filtrare il catalogo. Il numero indica le specie dimostrative presenti.</p>
+      ${tilemap()}
+      <p class="note" style="margin-top:.8rem">Mappa schematica: ogni riquadro è una regione, disposta secondo la sua posizione approssimativa.</p>
+    </div>
+    <div>
+      <span class="label">Percorsi</span><h2 style="margin-block:.4rem 1rem">Itinerari tra i grandi ambienti</h2>
+      <div class="percorsi">${PERCORSI.map((p,i)=>`<a class="percorso" href="#percorso-${p.id}"><span class="n">${SPECIE.filter(s=>s.percorsi.includes(p.id)).length} sp.</span><h3>${p.nome}</h3><p>${p.testo.split(".")[0]}.</p></a>`).join("")}</div>
+    </div>
+  </div></section>
+
+  <section class="block"><div class="wrap">
+    <div class="sec-head"><div><span class="label">In evidenza</span><h2>Specie da conoscere</h2><p>Un endemismo siciliano a rischio critico, l'unica palma spontanea d'Italia, il pino del Pollino e una delle specie alloctone più diffuse.</p></div><a class="btn ghost" href="#catalogo">Apri il catalogo</a></div>
+    <div class="cards">${featured.map(card).join("")}</div>
+  </div></section>
+
+  <section class="block" style="background:var(--carta)"><div class="wrap">
+    <div class="sec-head"><div><span class="label">Guide botaniche</span><h2>Imparare a osservare</h2></div></div>
+    <div class="guides">${GUIDE.map(g=>`<a class="guide" href="#guida-${g.id}"><span class="label">Guida</span><h3>${g.titolo}</h3><p>${g.sotto}</p></a>`).join("")}</div>
+  </div></section>`;
+}
+
+function pageCatalogo(){
+  return `<div class="wrap catalog">
+  <aside class="filters" aria-label="Filtri">
+    <div class="field"><label for="f-q">Nome comune o scientifico</label><input id="f-q" type="search" value="${state.q.replace(/"/g,"&quot;")}" placeholder="Cerca…"></div>
+    <div class="field"><label for="f-fascia">Fascia altitudinale</label><select id="f-fascia"><option value="">Tutte</option>${FASCE.map(f=>`<option value="${f.id}"${state.fascia===f.id?" selected":""}>${f.nome}</option>`).join("")}</select></div>
+    <div class="field"><label for="f-reg">Regione</label><select id="f-reg"><option value="">Tutte</option>${REGIONI.slice().sort((a,b)=>a.nome.localeCompare(b.nome)).map(r=>`<option value="${r.id}"${state.regione===r.id?" selected":""}>${r.nome}</option>`).join("")}</select></div>
+    <div class="field"><label for="f-hab">Habitat</label><select id="f-hab"><option value="">Tutti</option>${Object.entries(HABITAT).map(([k,v])=>`<option value="${k}"${state.habitat===k?" selected":""}>${v}</option>`).join("")}</select></div>
+    <fieldset class="field"><legend>Periodo di fioritura</legend><div class="months">${MESI.map((m,i)=>`<button type="button" data-m="${i+1}" aria-pressed="${state.mesi.includes(i+1)}">${m}</button>`).join("")}</div></fieldset>
+    <fieldset class="field"><legend>Origine</legend>${Object.entries(STATUS).map(([k,v])=>`<label class="check"><input type="checkbox" id="st-${k}" value="${k}"${state.status.includes(k)?" checked":""}> ${v.label}</label>`).join("")}</fieldset>
+    <button class="btn ghost" id="f-reset" type="button">Azzera filtri</button>
+  </aside>
+  <section aria-labelledby="cat-h">
+    <div class="results-head"><div><span class="label">Catalogo</span><h1 id="cat-h" style="font-size:clamp(2rem,4vw,2.8rem)">Schede botaniche</h1></div><p class="label" id="count" aria-live="polite"></p></div>
+    <div id="results"></div>
+  </section></div>`;
+}
+function filtered(){
+  const q=state.q.trim().toLowerCase();
+  return SPECIE.filter(s=>{
+    if(q&&![s.comune,s.sci,s.famiglia,...(s.altri||[]),s.sin||""].some(t=>t.toLowerCase().includes(q)))return false;
+    if(state.fascia&&!s.fasce.includes(state.fascia))return false;
+    if(state.regione&&!s.regioni.includes(state.regione))return false;
+    if(state.habitat&&!s.habitat.includes(state.habitat))return false;
+    if(state.mesi.length&&!(s.fioritura&&state.mesi.some(m=>s.fioritura.includes(m))))return false;
+    if(state.status.length&&!state.status.includes(s.status))return false;
+    return true;
+  });
+}
+function renderResults(){
+  const list=filtered();
+  $("#count").textContent=`${list.length} di ${SPECIE.length} specie`;
+  $("#results").innerHTML=list.length?`<div class="cards">${list.map(card).join("")}</div>`:`<div class="empty"><p>Nessuna specie corrisponde ai filtri scelti.</p><p>Prova a togliere un filtro o a cercare per famiglia botanica.</p></div>`;
+}
+function bindCatalogo(){
+  const on=(id,ev,fn)=>$(id).addEventListener(ev,fn);
+  on("#f-q","input",e=>{state.q=e.target.value;renderResults();});
+  on("#f-fascia","change",e=>{state.fascia=e.target.value;renderResults();});
+  on("#f-reg","change",e=>{state.regione=e.target.value;renderResults();});
+  on("#f-hab","change",e=>{state.habitat=e.target.value;renderResults();});
+  document.querySelectorAll(".months button").forEach(b=>b.addEventListener("click",()=>{const m=+b.dataset.m;const i=state.mesi.indexOf(m);i<0?state.mesi.push(m):state.mesi.splice(i,1);b.setAttribute("aria-pressed",i<0);renderResults();}));
+  document.querySelectorAll("fieldset input[type=checkbox]").forEach(c=>c.addEventListener("change",()=>{state.status=[...document.querySelectorAll("fieldset input[type=checkbox]:checked")].map(x=>x.value);renderResults();}));
+  on("#f-reset","click",()=>{Object.assign(state,{q:"",fascia:"",regione:"",habitat:"",mesi:[],status:[]});render();});
+  renderResults();
+}
+
+function related(sp){
+  const score=o=>(o.famiglia===sp.famiglia?3:0)+o.fasce.filter(f=>sp.fasce.includes(f)).length*2+o.percorsi.filter(p=>sp.percorsi.includes(p)).length;
+  return SPECIE.filter(o=>o.id!==sp.id).map(o=>({o,s:score(o)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,4).map(x=>x.o);
+}
+function pageSpecie(id){
+  const sp=byId(id); if(!sp) return pageNotFound();
+  const parts=[["foglie","Foglie"],["fiori","Fiori"],["frutti","Frutti"],["portamento","Portamento"]];
+  const gallery=parts.map(([k,lab])=>{const svg=partSVG(sp,k);
+    if(!svg){const why=k==="fiori"&&sp.gimno?"Non applicabile: gimnosperma, produce coni":"Immagine non ancora disponibile";
+      return `<figure class="ph na"><div class="img">${why}</div><figcaption><b>${lab}</b><span>In attesa di materiale verificato</span></figcaption></figure>`;}
+    return `<figure class="ph"><div class="img">${svg}</div><figcaption><b>${lab}</b><span>Illustrazione schematica · fotografia da archivio con licenza in arrivo</span></figcaption></figure>`;}).join("");
+  const cal=MESI.map((m,i)=>`<div class="${sp.fioritura&&sp.fioritura.includes(i+1)?"on":""}">${m}</div>`).join("");
+  const regs=sp.regioni.map(r=>regione(r).nome).sort((a,b)=>a.localeCompare(b));
+  const rel=related(sp);
+  let cons;
+  if(sp.cons){cons=`<div class="cons-box">${sp.cons.iucn?`<p><span class="label">Lista Rossa IUCN</span><br>${sp.cons.iucn}</p>`:""}${sp.cons.legge?`<p><span class="label">Protezione legale</span><br>${sp.cons.legge}</p>`:""}${sp.cons.nota?`<p class="muted" style="font-size:.92rem">${sp.cons.nota}</p>`:""}</div>`;}
+  else cons=`<p class="note">Nessuno stato di conservazione o protezione legale documentato in questa scheda. Il campo resta vuoto finché non è supportato da una fonte.</p>`;
+  return `<div class="wrap">
+  <nav class="crumbs" aria-label="Percorso"><a href="#home">Home</a> / <a href="#catalogo">Catalogo</a> / ${sp.famiglia} / ${sp.comune}</nav>
+  <header class="sp-head">
+    <span class="label">Famiglia ${sp.famiglia} · ${sp.portamento}</span>
+    <h1>${sp.comune}</h1>
+    <p class="sci">${sp.sci} <span class="auth">${sp.autore}</span></p>
+    ${sp.sin||sp.altri.length?`<p class="muted" style="font-size:.95rem">${sp.altri.length?`Altri nomi: ${sp.altri.join(", ")}. `:""}${sp.sin?`Sinonimo: <i>${sp.sin}</i>.`:""}</p>`:""}
+    <div class="row">${badges(sp)}${sp.origine?`<span class="label">Origine: ${sp.origine}</span>`:""}</div>
+  </header>
+  <div class="sp-grid">
+    <div style="min-width:0">
+      <div class="gallery">${gallery}</div>
+      <div class="panel" style="margin-top:2.2rem"><h2>Descrizione</h2><div class="prose"><p>${sp.descr}</p></div></div>
+      <div class="panel"><h2>Come riconoscerla</h2><ul class="keys">${sp.keys.map(k=>`<li>${k}</li>`).join("")}</ul></div>
+      <div class="panel"><h2>Habitat e distribuzione</h2>
+        <dl class="facts">
+          <div class="fact"><dt>Origine</dt><dd><b>${STATUS[sp.status].label}.</b> ${STATUS[sp.status].def}</dd></div>
+          <div class="fact"><dt>Fascia</dt><dd>${sp.fasce.map(f=>`<a href="#fascia-${f}">${fascia(f).nome}</a>`).join(", ")}</dd></div>
+          <div class="fact"><dt>Quota</dt><dd>${sp.quota}</dd></div>
+          <div class="fact"><dt>Habitat</dt><dd>${sp.habitat.map(h=>HABITAT[h]).join(", ")}</dd></div>
+          <div class="fact"><dt>Distribuzione</dt><dd>${sp.distribuzione}</dd></div>
+          <div class="fact"><dt>Regioni</dt><dd>${regs.join(", ")}</dd></div>
+        </dl>
+      </div>
+    </div>
+    <aside style="min-width:0">
+      <div class="panel minimap"><span class="label">Presenza regionale</span>${tilemap({mini:true,on:sp.regioni})}
+        <p class="note">Elenco regionale dimostrativo, da allineare al Portale della Flora d'Italia prima della pubblicazione.</p></div>
+      <div class="panel"><span class="label">Periodo di fioritura</span>
+        ${sp.fioritura?`<div class="calendar" role="img" aria-label="Fioritura: ${sp.fioritura.map(m=>MESI[m-1]).join(", ")}">${cal}</div>`:`<p>${sp.fiorNota}</p>`}
+        ${sp.fioritura&&sp.fiorNota?`<p class="note">${sp.fiorNota}</p>`:""}</div>
+      <div class="panel"><span class="label">Endemismo</span><p>${sp.status==="endemica"?"Specie endemica. "+sp.distribuzione.split(".")[0]+".":sp.id==="pinus-heldreichii"?"Non endemica: in Italia ha un areale molto ristretto, ma la specie è presente anche nei Balcani.":"Non endemica dell'Italia."}</p></div>
+      <div class="panel"><span class="label">Conservazione e protezione</span>${cons}</div>
+      <div class="panel"><span class="label">Fonti</span><ol class="sources">${sp.fonti.map(f=>`<li>${FONTI[f]}</li>`).join("")}</ol>
+        <div class="stamp"><span>Aggiornamento: ${fmtDate(AGGIORNAMENTO)}</span><span>Stato: <b>bozza da revisionare</b></span></div></div>
+    </aside>
+  </div>
+  ${rel.length?`<section class="block"><div class="sec-head"><div><span class="label">Specie correlate</span><h2>Nella stessa famiglia o negli stessi ambienti</h2></div></div><div class="cards">${rel.map(card).join("")}</div></section>`:""}
+  </div>`;
+}
+
+function pageFasce(){
+  return `<div class="wrap"><div class="page-hero"><span class="label">Sezioni principali</span><h1>Fasce altitudinali</h1><p class="lede">Cinque fasce di vegetazione, dalla costa alle vette. Le quote sono indicative e variano con latitudine ed esposizione.</p></div>
+  <div class="transect">${transectSVG()}</div>
+  <div class="fasce-list">${FASCE.map(f=>`<a class="fascia-card" href="#fascia-${f.id}"><span class="label">${SPECIE.filter(s=>s.fasce.includes(f.id)).length} specie</span><h3>${f.nome}</h3><p>${f.breve}. ${f.quota.charAt(0).toUpperCase()+f.quota.slice(1)}.</p></a>`).join("")}</div></div>`;
+}
+function pageFascia(id){
+  const f=fascia(id); if(!f) return pageNotFound();
+  const list=SPECIE.filter(s=>s.fasce.includes(id));
+  return `<div class="wrap"><nav class="crumbs"><a href="#home">Home</a> / <a href="#fasce">Fasce</a> / ${f.nome}</nav>
+  <div class="page-hero"><span class="label">Fascia altitudinale</span><h1>${f.nome}</h1><p class="lede">${f.testo}</p><p class="label">Quota: ${f.quota}</p>
+  <p><button class="btn ghost" data-filter-fascia="${id}">Filtra nel catalogo</button></p></div>
+  <div class="cards">${list.map(card).join("")}</div></div>`;
+}
+function pagePercorsi(){
+  return `<div class="wrap"><div class="page-hero"><span class="label">Percorsi</span><h1>Itinerari tra i grandi ambienti</h1><p class="lede">Sei percorsi geografici attraversano il catalogo: ogni specie può appartenere a più percorsi.</p></div>
+  <div class="percorsi">${PERCORSI.map(p=>`<a class="percorso" href="#percorso-${p.id}"><span class="n">${SPECIE.filter(s=>s.percorsi.includes(p.id)).length} sp.</span><h3>${p.nome}</h3><p>${p.testo}</p></a>`).join("")}</div></div>`;
+}
+function pagePercorso(id){
+  const p=PERCORSI.find(x=>x.id===id); if(!p) return pageNotFound();
+  const list=SPECIE.filter(s=>s.percorsi.includes(id));
+  return `<div class="wrap"><nav class="crumbs"><a href="#home">Home</a> / <a href="#percorsi">Percorsi</a> / ${p.nome}</nav>
+  <div class="page-hero"><span class="label">Percorso</span><h1>${p.nome}</h1><p class="lede">${p.testo}</p></div>
+  <div class="cards">${list.map(card).join("")}</div></div>`;
+}
+function pageGuide(){
+  return `<div class="wrap"><div class="page-hero"><span class="label">Guide botaniche</span><h1>Imparare a osservare</h1></div>
+  <div class="guides">${GUIDE.map(g=>`<a class="guide" href="#guida-${g.id}"><span class="label">Guida</span><h3>${g.titolo}</h3><p>${g.sotto}</p></a>`).join("")}</div></div>`;
+}
+function pageGuida(id){
+  const g=GUIDE.find(x=>x.id===id); if(!g) return pageNotFound();
+  return `<div class="wrap"><nav class="crumbs"><a href="#home">Home</a> / <a href="#guide">Guide</a> / ${g.titolo}</nav>
+  <article class="page-hero"><span class="label">Guida</span><h1>${g.titolo}</h1><p class="lede muted">${g.sotto}</p>${g.corpo.map(p=>`<p>${p}</p>`).join("")}</article>
+  <section class="block"><div class="sec-head"><div><span class="label">Schede citate</span><h2>Specie della guida</h2></div></div><div class="cards">${g.specie.map(byId).map(card).join("")}</div></section></div>`;
+}
+function pageMetodo(){
+  const rows=[["id","string","Slug stabile, es. quercus-ilex"],["nome_scientifico","string + autore","Nomenclatura allineata alla checklist nazionale"],["sinonimi","string[]","Nomi in uso nella letteratura"],["nomi_comuni","string[]","Nome principale e varianti regionali"],["famiglia","string","Famiglia secondo la checklist adottata"],["status","enum","autoctona · endemica · archeofita · neofita casuale · naturalizzata · invasiva"],["fasce","enum[]","mediterranea · planiziale · collinare · montana · alpina"],["habitat","enum[]","Vocabolario controllato (in futuro codici EUNIS o Natura 2000)"],["presenze_regionali","{regione, stato, fonte}[]","Una riga per regione, con stato (presente, dubbia, estinta) e fonte"],["fioritura","int[] | null","Mesi 1–12; null per le gimnosperme"],["conservazione","{iucn, liste_rosse, normativa, fonte}","Compilato solo se documentato"],["media","{tipo, file, autore, licenza, fonte}[]","Foglie, fiori, frutti, portamento; licenza obbligatoria"],["fonti","riferimento[]","Bibliografia con DOI o URL"],["revisione","{data, revisore, stato}","bozza · in revisione · validata"]];
+  return `<div class="wrap"><div class="page-hero"><span class="label">Metodo e fonti</span><h1>Come sono costruite le schede</h1>
+  <p class="lede">Questo è un prototipo. Le undici schede presenti servono a mostrare la struttura: i testi riportano informazioni di letteratura botanica corrente, ma l'elenco delle regioni e le date di fioritura vanno ancora validati sulle fonti indicate.</p>
+  <p>Ogni dato della scheda è un campo separato con la propria fonte. I campi su endemismo, stato di conservazione e protezione legale restano vuoti finché non esiste una fonte che li documenti.</p></div>
+  <section class="block" style="padding-top:1rem"><h2 style="margin-bottom:1rem">Modello dati di una scheda</h2>
+  <div class="tbl"><table class="schema"><thead><tr><th>Campo</th><th>Tipo</th><th>Note</th></tr></thead><tbody>${rows.map(r=>`<tr><td><code>${r[0]}</code></td><td><code>${r[1]}</code></td><td>${r[2]}</td></tr>`).join("")}</tbody></table></div></section>
+  <section class="block"><h2 style="margin-bottom:1rem">Fonti di riferimento</h2><ol class="sources">${Object.values(FONTI).map(f=>`<li>${f}</li>`).join("")}</ol></section>
+  <section class="block"><h2 style="margin-bottom:1rem">Categorie di origine</h2><dl class="facts">${Object.values(STATUS).map(s=>`<div class="fact"><dt>${s.label}</dt><dd>${s.def}</dd></div>`).join("")}</dl></section></div>`;
+}
+function pageNotFound(){return `<div class="wrap page-hero"><h1>Pagina non trovata</h1><p>Il collegamento non corrisponde a nessuna scheda. <a href="#catalogo">Torna al catalogo</a>.</p></div>`;}
+
+/* ============ ROUTER ============ */
+function render(){
+  const h=(location.hash||"#home").slice(1);
+  let html,nav=h.split("-")[0];
+  if(h==="home"||h==="") html=pageHome();
+  else if(h==="catalogo") html=pageCatalogo();
+  else if(h.startsWith("specie-")) {html=pageSpecie(h.slice(7));nav="catalogo";}
+  else if(h==="fasce") html=pageFasce();
+  else if(h.startsWith("fascia-")) {html=pageFascia(h.slice(7));nav="fasce";}
+  else if(h==="percorsi") html=pagePercorsi();
+  else if(h.startsWith("percorso-")) {html=pagePercorso(h.slice(9));nav="percorsi";}
+  else if(h==="guide") html=pageGuide();
+  else if(h.startsWith("guida-")) {html=pageGuida(h.slice(6));nav="guide";}
+  else if(h==="metodo") html=pageMetodo();
+  else html=pageNotFound();
+  const main=$("#contenuto"); main.innerHTML=html;
+  document.querySelectorAll("nav.main a").forEach(a=>a.dataset.nav===(nav||"home")?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current"));
+  if(h==="catalogo") bindCatalogo();
+  bindCommon();
+}
+function goCatalog(patch){Object.assign(state,{q:"",fascia:"",regione:"",habitat:"",mesi:[],status:[]},patch);if(location.hash==="#catalogo")render();else location.hash="catalogo";}
+function bindCommon(){
+  const f=$("#home-search"); if(f) f.addEventListener("submit",e=>{e.preventDefault();goCatalog({q:$("#hq").value});});
+  document.querySelectorAll("[data-q]").forEach(b=>b.addEventListener("click",()=>goCatalog({q:b.dataset.q})));
+  document.querySelectorAll("[data-reg]").forEach(b=>b.addEventListener("click",()=>goCatalog({regione:b.dataset.reg})));
+  document.querySelectorAll("[data-filter-fascia]").forEach(b=>b.addEventListener("click",()=>goCatalog({fascia:b.dataset.filterFascia})));
+}
+window.addEventListener("hashchange",()=>{render();window.scrollTo(0,0);$("#contenuto").focus({preventScroll:true});});
+render();
+</script>
+
+</html>

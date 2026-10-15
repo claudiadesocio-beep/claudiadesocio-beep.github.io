@@ -1,0 +1,334 @@
+/* Flora Italiana — foglio di stile.
+   Layout: tavola d'erbario — intestazione verde bosco, fogli crema, etichette in mono come cartellini d'erbario,
+   dettagli floreali (rametti, punti di colore) solo nelle intestazioni di sezione. */
+:root {
+  --bosco: #23402e; --salvia: #8ea585; --salvia-soft: #e2e9d9;
+  --crema: #f6f1e3; --carta: #fcfaf2; --fiore: #a5405a; --fiore-soft: #f4dfe2;
+  --ink: #1b271f; --muted: #56655a; --line: #d8d2bf;
+  --head-bg: #23402e; --head-fg: #f6f1e3; --accent-text: #23402e;
+  --leaf: #4f7a54; --leaf-2: #9ab38e; --leaf-ink: #2a4a32; --petal: #fffdf6; --giallo: #d8a531; --pale: #f3e79a;
+  --rosa: #c9516d; --rosso: #c8372d; --blu: #2f4fa8; --viola: #8a64b5; --viola-scuro: #523a86;
+  --berry: #36385e; --bruno: #7a5434; --terra: #b0532c;
+  --band-1: #e2e9d9; --band-2: #c9d8bd; --band-3: #9ab38e; --band-4: #6f9470; --band-5: #eef0ea;
+  --f-display: "Cormorant Garamond", "Garamond", "Times New Roman", serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r: 4px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bosco: #a8c7a0; --salvia: #7d9474; --salvia-soft: #243128;
+  --crema: #141c17; --carta: #1a241e; --fiore: #ec97aa; --fiore-soft: #3a2228;
+  --ink: #ebe7da; --muted: #a8b2a6; --line: #34433a;
+  --head-bg: #0e1611; --head-fg: #ebe7da; --accent-text: #b9d6b0;
+  --leaf: #7fa77f; --leaf-2: #56705a; --leaf-ink: #c4dcbc; --petal: #f1ece0; --giallo: #e2b64e; --pale: #e9dd8c;
+  --rosa: #e07890; --rosso: #e0604f; --blu: #7f9ae8; --viola: #b293dd; --viola-scuro: #8d72c4;
+  --berry: #9a9fe0; --bruno: #c79a6e; --terra: #e08a63;
+  --band-1: #26352b; --band-2: #2e4234; --band-3: #3d5843; --band-4: #4f7255; --band-5: #39443d;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bosco: #a8c7a0; --salvia: #7d9474; --salvia-soft: #243128;
+  --crema: #141c17; --carta: #1a241e; --fiore: #ec97aa; --fiore-soft: #3a2228;
+  --ink: #ebe7da; --muted: #a8b2a6; --line: #34433a;
+  --head-bg: #0e1611; --head-fg: #ebe7da; --accent-text: #b9d6b0;
+  --leaf: #7fa77f; --leaf-2: #56705a; --leaf-ink: #c4dcbc; --petal: #f1ece0; --giallo: #e2b64e; --pale: #e9dd8c;
+  --rosa: #e07890; --rosso: #e0604f; --blu: #7f9ae8; --viola: #b293dd; --viola-scuro: #8d72c4;
+  --berry: #9a9fe0; --bruno: #c79a6e; --terra: #e08a63;
+  --band-1: #26352b; --band-2: #2e4234; --band-3: #3d5843; --band-4: #4f7255; --band-5: #39443d;
+  color-scheme: dark; }
+
+* { box-sizing: border-box }
+html { -webkit-text-size-adjust: 100% }
+body { margin: 0; background: var(--crema); color: var(--ink); font-family: var(--f-body); font-size: 1.0625rem; line-height: 1.6 }
+img { max-width: 100%; height: auto; display: block }
+a { color: var(--accent-text); text-underline-offset: .15em }
+:focus-visible { outline: 3px solid var(--fiore); outline-offset: 2px }
+.skip { position: absolute; left: -999px; top: 0; background: var(--carta); color: var(--ink); padding: .6rem 1rem; z-index: 30 }
+.skip:focus { left: 1rem }
+main:focus { outline: none }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 600; line-height: 1.1; text-wrap: balance; margin: 0 }
+h1 { font-size: clamp(2.3rem, 6vw, 4rem) }
+h2 { font-size: clamp(1.7rem, 3.4vw, 2.4rem) }
+h3 { font-size: 1.4rem }
+p { margin: 0 }
+.sci { font-style: italic }
+.auth { font-style: normal; color: var(--muted); font-size: .85em }
+.label { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted) }
+.muted { color: var(--muted) }
+.small { font-size: .9rem }
+.na { color: var(--muted); font-style: italic }
+.tr-missing { font-family: var(--f-mono); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; border: 1px dashed var(--fiore); color: var(--fiore); padding: .05rem .3rem; border-radius: 2px; vertical-align: middle; font-style: normal }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap }
+.wrap { max-width: 1200px; margin: 0 auto; padding-inline: 16px }
+@media (min-width: 700px) { .wrap { padding-inline: 32px } }
+
+/* ---------- intestazione ---------- */
+header.site { background: var(--head-bg); color: var(--head-fg); position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20 }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: .4rem 1rem; padding-block: .7rem; flex-wrap: wrap }
+.brand { display: flex; align-items: baseline; gap: .6rem; color: var(--head-fg); text-decoration: none; min-width: 0 }
+.brand b { font-family: var(--f-display); font-size: 1.65rem; font-weight: 700 }
+.brand span { font-family: var(--f-mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; opacity: .78 }
+.bar-tools { display: flex; align-items: center; gap: .6rem; order: 2 }
+.lang { display: flex; border: 1px solid rgba(246,241,227,.4); border-radius: var(--r); overflow: hidden }
+.lang button { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; background: transparent; color: var(--head-fg); border: 0; padding: .45rem .65rem; cursor: pointer; min-width: 44px; min-height: 36px }
+.lang button[aria-pressed="true"] { background: var(--head-fg); color: var(--head-bg) }
+.menu-btn { display: none; font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; background: transparent; color: var(--head-fg); border: 1px solid rgba(246,241,227,.4); border-radius: var(--r); padding: .45rem .8rem; min-height: 36px; cursor: pointer }
+nav.main { display: flex; gap: .1rem; flex-wrap: wrap; order: 3; width: 100% }
+nav.main a { color: var(--head-fg); text-decoration: none; font-family: var(--f-mono); font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; padding: .5rem .65rem; border-radius: var(--r); opacity: .86 }
+nav.main a:hover { opacity: 1; background: rgba(255,255,255,.08) }
+nav.main a[aria-current="page"] { opacity: 1; box-shadow: inset 0 -2px 0 var(--fiore) }
+.count-dot { display: inline-block; min-width: 1.3em; padding: 0 .3em; border-radius: 999px; background: var(--fiore); color: var(--head-bg); font-size: .68rem; text-align: center }
+@media (max-width: 760px) {
+  .menu-btn { display: inline-block }
+  nav.main { display: none; flex-direction: column; padding-bottom: .4rem }
+  nav.main.open { display: flex }
+  nav.main a { padding: .7rem .5rem; border-bottom: 1px solid rgba(246,241,227,.12) }
+  .brand span { display: none }
+}
+
+main { padding-bottom: 4rem; display: block }
+section.block { padding-block: clamp(2.5rem, 6vw, 4.2rem) }
+section.block.tint { background: var(--carta); border-block: 1px solid var(--line) }
+.sec-head { display: flex; justify-content: space-between; align-items: end; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.6rem }
+.sec-head > div { display: grid; gap: .35rem; max-width: 64ch }
+.sec-head p { color: var(--muted) }
+.sprig { width: 64px; height: 16px; display: block }
+.flower-dot { fill: var(--fiore) }
+.sub { margin-block: 2.4rem .6rem; font-size: 1.6rem }
+.note { font-size: .86rem; color: var(--muted); border-left: 2px solid var(--salvia); padding-left: .8rem; margin-top: .8rem }
+.lead-small { margin-bottom: 1.2rem; color: var(--muted) }
+
+/* ---------- hero ---------- */
+.hero { display: grid; grid-template-columns: 1fr; gap: 2rem; padding-block: 2.2rem 2.5rem; align-items: center }
+@media (min-width: 900px) { .hero { grid-template-columns: 1.05fr .95fr; gap: 3.5rem } }
+.hero-text { min-width: 0; display: grid; gap: 1.2rem }
+.hero-text h1 { font-size: clamp(3rem, 9vw, 5.6rem); color: var(--accent-text); letter-spacing: -.01em }
+.hero-text .lede { font-size: 1.18rem; max-width: 56ch }
+.hero-figure { margin: 0; background: var(--carta); border: 1px solid var(--line); padding: 1rem; box-shadow: 0 18px 40px -30px rgba(20,35,25,.5) }
+.hero-figure svg, .hero-figure img { width: 100%; height: auto; display: block; aspect-ratio: 13 / 10; object-fit: cover }
+.hero-figure figcaption, .main-img figcaption { font-family: var(--f-mono); font-size: .68rem; letter-spacing: .05em; color: var(--muted); padding-top: .6rem; border-top: 1px dashed var(--line); margin-top: .6rem }
+form.search { display: grid; gap: .45rem; max-width: 600px }
+form.search label { font-family: var(--f-mono); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted) }
+.search-row { display: flex; gap: .5rem; flex-wrap: wrap }
+.search-row input { flex: 1 1 240px; min-width: 0; font: inherit; font-size: 1.05rem; padding: .85rem 1rem; border: 2px solid var(--bosco); background: var(--carta); color: var(--ink); border-radius: var(--r) }
+.btn { font-family: var(--f-mono); font-size: .8rem; letter-spacing: .07em; text-transform: uppercase; padding: .8rem 1.2rem; border-radius: var(--r); border: 1.5px solid var(--bosco); background: var(--bosco); color: var(--carta); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: .4rem; min-height: 44px }
+.btn.ghost { background: transparent; color: var(--accent-text) }
+.btn:hover { filter: brightness(1.08) }
+.chips { display: flex; flex-wrap: wrap; gap: .4rem }
+.chip { font: inherit; font-size: .9rem; border: 1px solid var(--line); background: var(--carta); color: var(--ink); padding: .35rem .8rem; border-radius: 999px; cursor: pointer; min-height: 36px }
+.chip:hover { border-color: var(--salvia) }
+
+/* ---------- accessi rapidi ---------- */
+.quick { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0; border-block: 1px solid var(--line); margin-bottom: 1rem; padding-block: 0 }
+.quick-item { display: grid; gap: .2rem; padding: 1.1rem 1rem; text-decoration: none; color: var(--ink); border-left: 1px solid var(--line) }
+.quick-item:first-child { border-left: 0 }
+.quick-item b { font-family: var(--f-display); font-size: 1.55rem; font-weight: 600; color: var(--accent-text) }
+.quick-item span:last-child { font-size: .92rem; color: var(--muted) }
+.quick-item:hover b { color: var(--fiore) }
+@media (max-width: 520px) { .quick-item { border-left: 0; border-top: 1px solid var(--line) } .quick-item:first-child { border-top: 0 } }
+
+/* ---------- profilo altimetrico ---------- */
+.transect { background: var(--carta); border: 1px solid var(--line); padding: 1rem; overflow-x: auto }
+.transect svg { display: block; width: 100%; min-width: 620px; height: auto }
+.transect .sea { fill: var(--carta) }
+.transect .wave { fill: none; stroke: var(--salvia); stroke-width: 1 }
+.band path { stroke: var(--leaf-ink); stroke-width: 1; transition: opacity .2s }
+.band:hover path, .band:focus path { opacity: .72 }
+.band text { font-family: var(--f-mono); font-size: 11px; letter-spacing: .06em; fill: var(--ink) }
+.band-1 { fill: var(--band-1) } .band-2 { fill: var(--band-2) } .band-3 { fill: var(--band-3) } .band-4 { fill: var(--band-4) } .band-5 { fill: var(--band-5) }
+.hab-routes { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem }
+.hab-route, .belt-step { display: grid; gap: .35rem; padding: 1rem 0; border-top: 2px solid var(--bosco); text-decoration: none; color: var(--ink) }
+.hab-route h3, .belt-step h3 { color: var(--accent-text) }
+.hab-route p, .belt-step p { font-size: .94rem; color: var(--muted) }
+.hab-route:hover h3, .belt-step:hover h3 { color: var(--fiore) }
+.belt-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0 }
+.belt-steps li { border-left: 3px solid var(--salvia); padding-left: 1rem }
+.belt-steps li:nth-child(1) { border-color: var(--band-5) } .belt-steps li:nth-child(2) { border-color: var(--band-4) } .belt-steps li:nth-child(3) { border-color: var(--band-3) } .belt-steps li:nth-child(4) { border-color: var(--band-2) } .belt-steps li:nth-child(5) { border-color: var(--salvia) }
+.belt-step { border-top: 1px solid var(--line) }
+
+/* ---------- mappa e percorsi ---------- */
+.map-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: start }
+@media (min-width: 880px) { .map-grid { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 3rem } }
+.tilemap { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; max-width: 420px; width: 100% }
+.tile { aspect-ratio: 1; max-width: 100%; border: 1px solid var(--line); background: var(--salvia-soft); color: var(--ink); font-family: var(--f-mono); font-size: .72rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; border-radius: 3px; text-decoration: none; min-width: 0 }
+.tile b { font-weight: 500; font-size: .78rem }
+.tile small { font-size: .62rem; color: var(--muted) }
+a.tile:hover, a.tile.current { background: var(--bosco); color: var(--carta); border-color: var(--bosco) }
+a.tile:hover small, a.tile.current small { color: var(--carta) }
+.tilemap.mini { max-width: 300px }
+.tilemap.mini .tile b { font-size: .62rem }
+.tile.on { background: var(--leaf-2); border-color: var(--leaf) }
+.tile.off { background: transparent; opacity: .5 }
+.region-list { list-style: none; padding: 0; margin: 1.2rem 0 0; columns: 2; column-gap: 1.5rem; font-size: .95rem }
+.region-list li { break-inside: avoid; padding: .15rem 0 }
+.region-list a[aria-current="page"] { font-weight: 600; color: var(--fiore) }
+.percorsi { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0 1.5rem; border-top: 1px solid var(--line) }
+.percorso { display: grid; gap: .2rem; padding: 1rem .2rem; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink) }
+.percorso .n { font-family: var(--f-mono); font-size: .72rem; color: var(--fiore); letter-spacing: .06em; text-transform: uppercase }
+.percorso h3 { font-size: 1.35rem }
+.percorso p { font-size: .92rem; color: var(--muted) }
+.percorso:hover h3 { color: var(--fiore) }
+
+/* ---------- schede (card) ---------- */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 1.4rem }
+.card { position: relative; background: var(--carta); border: 1px solid var(--line); min-width: 0; transition: transform .15s, border-color .15s }
+.card:hover { transform: translateY(-2px); border-color: var(--salvia) }
+.card-link { display: grid; grid-template-rows: auto 1fr; height: 100%; text-decoration: none; color: var(--ink) }
+.card .plate { position: relative; aspect-ratio: 3 / 4; max-width: 100%; border-bottom: 1px solid var(--line); padding: .6rem; display: flex; overflow: hidden }
+.card .plate svg { width: 100%; height: 100% }
+.card .plate img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover }
+.ai-tag { position: absolute; left: .5rem; bottom: .5rem; font-family: var(--f-mono); font-size: .62rem; letter-spacing: .08em; background: var(--carta); color: var(--ink); border: 1px solid var(--line); padding: .1rem .35rem; border-radius: 2px }
+.card .body { padding: .9rem 1rem 1rem; display: grid; gap: .3rem; align-content: start }
+.card h3 { font-size: 1.4rem; padding-right: 2.2rem }
+.card .sci { font-family: var(--f-display); font-size: 1.08rem }
+.card-meta { font-family: var(--f-mono); font-size: .68rem; letter-spacing: .04em; color: var(--muted); text-transform: uppercase }
+.card .meta { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .3rem }
+.fav { position: absolute; top: .5rem; right: .5rem; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--carta); display: grid; place-items: center; cursor: pointer; padding: 0 }
+.fav svg { width: 20px; height: 20px; fill: none; stroke: var(--fiore); stroke-width: 1.8 }
+.fav[aria-pressed="true"] svg { fill: var(--fiore) }
+.fav:hover { border-color: var(--fiore) }
+.badge { font-family: var(--f-mono); font-size: .64rem; letter-spacing: .07em; text-transform: uppercase; padding: .2rem .45rem; border-radius: 2px; border: 1px solid var(--salvia); color: var(--ink); white-space: nowrap }
+.origin-autoctona { background: var(--salvia-soft) }
+.origin-endemica { background: var(--bosco); border-color: var(--bosco); color: var(--carta) }
+.origin-naturalizzata { border-color: var(--terra); color: var(--terra) }
+.origin-invasiva { background: var(--terra); border-color: var(--terra); color: var(--carta) }
+.origin-non-verificata { border-style: dashed; border-color: var(--muted); color: var(--muted) }
+.badge.cons { border-style: dashed; border-color: var(--fiore); color: var(--fiore) }
+.q-verificato { background: var(--bosco); border-color: var(--bosco); color: var(--carta) }
+.q-dimostrativo { background: var(--salvia-soft) }
+.q-da-verificare { border-style: dashed; border-color: var(--fiore); color: var(--fiore) }
+
+.guides { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.4rem }
+.guide { display: grid; gap: .45rem; text-decoration: none; color: var(--ink); padding: 1.2rem; border: 1px solid var(--line); background: var(--carta) }
+.tint .guide { background: var(--crema) }
+.guide p { color: var(--muted); font-size: .95rem }
+.guide:hover h3 { color: var(--fiore) }
+
+/* ---------- catalogo ---------- */
+.catalog { display: grid; grid-template-columns: 1fr; gap: 1.6rem; padding-top: 1.8rem }
+@media (min-width: 920px) { .catalog { grid-template-columns: 280px minmax(0, 1fr); gap: 2.2rem } }
+.filters { background: var(--carta); border: 1px solid var(--line); align-self: start }
+@media (min-width: 920px) { .filters { position: sticky; top: 7rem } }
+.filters summary { cursor: pointer; padding: .9rem 1.1rem; font-family: var(--f-mono); font-size: .8rem; letter-spacing: .07em; text-transform: uppercase; display: flex; justify-content: space-between; gap: .5rem; min-height: 44px; align-items: center }
+.filters-body { display: grid; gap: 1.1rem; padding: 0 1.1rem 1.1rem }
+.field { display: grid; gap: .35rem; min-width: 0 }
+.field label, .field legend { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted) }
+.field input[type=search], .field select, .sort select { font: inherit; font-size: .98rem; padding: .55rem .6rem; border: 1px solid var(--line); background: var(--crema); color: var(--ink); border-radius: var(--r); width: 100%; min-height: 44px }
+fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: .35rem; min-width: 0 }
+.months { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px }
+.months button { font-family: var(--f-mono); font-size: .7rem; padding: .5rem 0; border: 1px solid var(--line); background: var(--crema); color: var(--ink); border-radius: 2px; cursor: pointer; min-height: 36px }
+.months button[aria-pressed="true"] { background: var(--bosco); color: var(--carta); border-color: var(--bosco) }
+.check { display: flex; gap: .5rem; align-items: center; font-size: .95rem; min-height: 32px }
+.check input { width: 18px; height: 18px; accent-color: var(--bosco) }
+.results { min-width: 0 }
+.results-head { display: flex; justify-content: space-between; align-items: end; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.2rem }
+.results-head h1 { font-size: clamp(2rem, 4vw, 2.8rem) }
+.results-tools { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap }
+.sort { display: flex; align-items: center; gap: .5rem; font-family: var(--f-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted) }
+.sort select { width: auto; text-transform: none; letter-spacing: 0; font-family: var(--f-body) }
+.empty { padding: 2rem; border: 1px dashed var(--line); text-align: center; color: var(--muted); display: grid; gap: .6rem; justify-items: center }
+
+/* ---------- scheda specie ---------- */
+.crumbs { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; padding-top: 1.4rem; color: var(--muted) }
+.crumbs a { color: var(--muted) }
+.sp-head { display: grid; gap: .6rem; padding-block: 1.1rem 1.8rem; border-bottom: 1px solid var(--line) }
+.sp-title { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap }
+.sp-title .fav { position: static }
+.sp-head .sci { font-family: var(--f-display); font-size: clamp(1.4rem, 3vw, 1.9rem) }
+.sp-head .row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center }
+.names { display: flex; flex-wrap: wrap; gap: .4rem 2rem; margin: 0 }
+.names div { display: grid; gap: .05rem }
+.names dt { font-family: var(--f-mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted) }
+.names dd { margin: 0 }
+.sp-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; padding-top: 2rem }
+@media (min-width: 960px) { .sp-grid { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) } }
+.col { min-width: 0 }
+.main-img { margin: 0 0 1rem; background: var(--carta); border: 1px solid var(--line); padding: 1rem }
+.main-img svg, .main-img img { width: 100%; max-height: 520px; aspect-ratio: 3 / 4; object-fit: contain; display: block; margin: 0 auto }
+.main-img img.is-fallback { object-fit: contain }
+.img-missing figcaption, .img-missing .ai-tag { display: none }
+.gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: .7rem }
+@media (max-width: 600px) { .gallery { grid-template-columns: repeat(2, 1fr) } }
+.ph { margin: 0; background: var(--carta); border: 1px solid var(--line); display: grid; grid-template-rows: auto 1fr; min-width: 0 }
+.ph .img { aspect-ratio: 1; max-width: 100%; display: flex; align-items: center; justify-content: center; padding: .6rem }
+.ph .img svg { width: 100%; height: 100% }
+.ph figcaption { border-top: 1px solid var(--line); padding: .45rem .6rem; display: grid; gap: .1rem }
+.ph figcaption b { font-family: var(--f-mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 500 }
+.ph figcaption span { font-size: .72rem; color: var(--muted); line-height: 1.35 }
+.ph.na .img { background: repeating-linear-gradient(135deg, transparent 0 9px, var(--salvia-soft) 9px 10px); font-family: var(--f-mono); font-size: .68rem; color: var(--muted); text-align: center }
+.panel { display: grid; gap: .9rem; margin-top: 2.2rem }
+.side .panel:first-child { margin-top: 0 }
+.prose { display: grid; gap: 1rem; max-width: 66ch }
+.facts { display: grid; border-top: 1px solid var(--line); margin: 0 }
+.fact { display: grid; grid-template-columns: 9.5rem 1fr; gap: 1rem; padding: .75rem 0; border-bottom: 1px solid var(--line) }
+.fact dt { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-top: .25rem }
+.fact dd { margin: 0; min-width: 0 }
+@media (max-width: 480px) { .fact { grid-template-columns: 1fr; gap: .2rem } }
+ul.keys { margin: 0; padding: 0; list-style: none; display: grid; gap: .6rem; max-width: 66ch }
+ul.keys li { padding-left: 1.4rem; position: relative }
+ul.keys li::before { content: ""; position: absolute; left: 0; top: .55em; width: .5rem; height: .5rem; border-radius: 50% 0; background: var(--fiore); transform: rotate(45deg) }
+.calendar { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px }
+.calendar div { font-family: var(--f-mono); font-size: .58rem; text-align: center; padding: .45rem 0; border: 1px solid var(--line); color: var(--muted); background: var(--carta); min-width: 0; overflow: hidden }
+.calendar div.on { background: var(--fiore); border-color: var(--fiore); color: var(--carta) }
+.calendar div.now { box-shadow: inset 0 -3px 0 var(--bosco) }
+.quality { background: var(--carta); border: 1px solid var(--line); padding: 1rem }
+.qlist { display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; margin: 0 }
+.qlist div { display: grid; gap: .25rem }
+.qlist dt { font-size: .82rem; color: var(--muted) }
+.qlist dd { margin: 0 }
+.cons-box { border: 1px solid var(--fiore); background: var(--fiore-soft); padding: 1rem; display: grid; gap: .5rem }
+.sources { margin: 0; padding-left: 1.2rem; display: grid; gap: .5rem; font-size: .92rem }
+.stamp { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .05em; display: flex; gap: 1rem; flex-wrap: wrap; color: var(--muted); padding: .8rem 0; border-block: 1px dashed var(--line) }
+
+/* ---------- pagine interne ---------- */
+.page-hero { padding-block: 1.6rem 1.6rem; display: grid; gap: .85rem; max-width: 72ch }
+.page-hero .lede { font-size: 1.15rem }
+.tbl { overflow-x: auto; position: relative; border: 1px solid var(--line); background: var(--carta) }
+table.schema { border-collapse: collapse; width: 100%; font-size: .9rem }
+table.schema th, table.schema td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top }
+table.schema th { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500 }
+table.schema code { font-family: var(--f-mono); font-size: .8rem }
+table.fcal { border-collapse: collapse; width: 100%; min-width: 680px; font-size: .9rem }
+table.fcal caption { text-align: left; padding: .7rem }
+table.fcal th, table.fcal td { border-bottom: 1px solid var(--line); padding: .45rem .3rem; text-align: center }
+table.fcal thead th { font-family: var(--f-mono); font-size: .66rem; letter-spacing: .06em; color: var(--muted); font-weight: 500 }
+table.fcal tbody th { text-align: left; font-weight: 400; padding-left: .7rem; position: sticky; left: 0; background: var(--carta); min-width: 12rem }
+table.fcal tbody th a { display: block; font-weight: 600 }
+table.fcal tbody th .sci { display: block; font-size: .8rem; color: var(--muted) }
+table.fcal td.on { background: var(--fiore); background-clip: padding-box; border-left: 2px solid var(--carta) }
+table.fcal .now { box-shadow: inset 0 -3px 0 var(--bosco) }
+table.fcal thead th.now { color: var(--ink); font-weight: 600 }
+
+footer.site { background: var(--head-bg); color: var(--head-fg); padding-block: 2.5rem }
+footer.site .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; font-size: .92rem }
+footer.site a { color: var(--head-fg) }
+footer.site .label { color: var(--head-fg); opacity: .72 }
+
+/* ---------- tavole SVG ---------- */
+.lf { fill: var(--leaf); stroke: var(--leaf-ink); stroke-width: .8 }
+.lf2 { fill: var(--leaf-2); stroke: var(--leaf-ink); stroke-width: .8 }
+.vein { stroke: var(--leaf-ink); stroke-width: .6; fill: none; opacity: .7 }
+.stem { stroke: var(--bruno); fill: none; stroke-linecap: round }
+.stem-green { stroke: var(--leaf-ink) }
+.grass { stroke: var(--leaf); stroke-width: 1.4; fill: none; stroke-linecap: round }
+.petal { fill: var(--petal); stroke: var(--leaf-ink); stroke-width: .7 }
+.stamen { stroke: var(--giallo); stroke-width: .6 }
+.spine { stroke: var(--bruno); stroke-width: 1 }
+.scale { stroke: var(--crema); stroke-width: .6; fill: none; opacity: .7 }
+.band-line { stroke: var(--petal); stroke-width: .6; opacity: .9 }
+.yel { fill: var(--giallo); stroke: var(--bruno); stroke-width: .6 }
+.pale { fill: var(--pale); stroke: var(--bruno); stroke-width: .5 }
+.pink { fill: var(--rosa); stroke: var(--leaf-ink); stroke-width: .6 }
+.red { fill: var(--rosso); stroke: var(--leaf-ink); stroke-width: .5 }
+.dark { fill: var(--ink) }
+.blue { fill: var(--blu); stroke: var(--leaf-ink); stroke-width: .6 }
+.violet { fill: var(--viola); stroke: var(--leaf-ink); stroke-width: .5 }
+.violet-dark { fill: var(--viola-scuro); stroke: var(--leaf-ink); stroke-width: .4 }
+.berry { fill: var(--berry); stroke: var(--leaf-ink); stroke-width: .6 }
+.brown { fill: var(--bruno); stroke: var(--leaf-ink); stroke-width: .6 }
+.terra { fill: var(--terra); stroke: var(--leaf-ink); stroke-width: .6 }
+.wool { fill: var(--petal); stroke: var(--muted); stroke-width: .7 }
+.needle { stroke: var(--leaf); stroke-width: 1.2; stroke-linecap: round; fill: none }
+.ground { stroke: var(--muted); stroke-width: 1; fill: none; stroke-dasharray: 3 3 }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important } }
